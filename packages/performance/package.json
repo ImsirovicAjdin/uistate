@@ -1,7 +1,7 @@
 {
-  "name": "@flowoverstack/uistate-performance",
+  "name": "@uistate/performance",
   "version": "1.0.0",
-  "description": "Performance monitoring tools for @flowoverstack/uistate",
+  "description": "Performance monitoring tools for @uistate/core",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -10,7 +10,7 @@
     "test": "jest"
   },
   "peerDependencies": {
-    "@flowoverstack/uistate": "^1.0.0",
+    "@uistate/core": "^1.0.0",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   }
 }

@@ -1,6 +1,6 @@
-# Contributing to @flowoverstack/uistate
+# Contributing to @uistate/core
 
-First off, thank you for considering contributing to @flowoverstack/uistate! It's people like you that make our library such a great tool.
+First off, thank you for considering contributing to @uistate/core! It's people like you that make our library such a great tool.
 
 ## Code of Conduct
 
@@ -72,8 +72,8 @@ npm run build
 
 The project is organized into two main packages:
 
-1. `@flowoverstack/uistate`: The core state management library
-2. `@flowoverstack/uistate-performance`: Optional performance monitoring tools
+1. `@uistate/core`: The core state management library
+2. `@uistate/performance`: Optional performance monitoring tools
 
 Each package has its own:
 - `package.json` with dependencies

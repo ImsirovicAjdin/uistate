@@ -1,4 +1,4 @@
-# @flowoverstack/uistate
+# @uistate/core
 
 High-performance UI state management using CSS custom properties. 44% faster than traditional state management solutions with 12.5% lower memory usage.
 
@@ -17,16 +17,16 @@ High-performance UI state management using CSS custom properties. 44% faster tha
 
 ```bash
 # Install the core package
-npm install @flowoverstack/uistate
+npm install @uistate/core
 
 # Optional: Install performance monitoring
-npm install @flowoverstack/uistate-performance
+npm install @uistate/performance
 ```
 
 ## Quick Start
 
 ```typescript
-import { UIState } from '@flowoverstack/uistate';
+import { UIState } from '@uistate/core';
 
 // Initialize state
 UIState.init();
@@ -43,7 +43,7 @@ const unsubscribe = UIState.observe('count', (newValue) => {
 });
 
 // React Hook
-import { useUIState } from '@flowoverstack/uistate/react';
+import { useUIState } from '@uistate/core/react';
 
 function Counter() {
   const [count, setCount] = useUIState('count', 0);
@@ -55,7 +55,7 @@ function Counter() {
 }
 ```
 
-## Why @flowoverstack/uistate?
+## Why @uistate/core?
 
 ### Performance
 
@@ -72,11 +72,11 @@ function Counter() {
 
 ## Performance Monitoring
 
-The `@flowoverstack/uistate-performance` package provides detailed performance metrics for your application:
+The `@uistate/performance` package provides detailed performance metrics for your application:
 
 ```typescript
-import { PerformanceTracker } from '@flowoverstack/uistate-performance';
-import { PerformanceDisplay } from '@flowoverstack/uistate-performance';
+import { PerformanceTracker } from '@uistate/performance';
+import { PerformanceDisplay } from '@uistate/performance';
 
 // Start tracking performance
 const tracker = PerformanceTracker.getInstance();
@@ -103,7 +103,7 @@ The performance tracker monitors:
 ## Project Structure
 
 ```
-@flowoverstack/uistate/
+@uistate/core/
 ├── src/                  # Core library
 │   ├── index.ts         # Main entry
 │   ├── UIState.ts       # Core implementation
@@ -129,4 +129,4 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ## License
 
-MIT © Imsirovic Ajdin
+MIT © Ajdin Imsirovic
