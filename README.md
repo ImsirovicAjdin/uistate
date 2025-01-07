@@ -1,4 +1,4 @@
-# ui-state
+# uistate
 
 High-performance UI state management using CSS custom properties. 44% faster than traditional state management solutions with 12.5% lower memory usage.
 
@@ -15,13 +15,13 @@ High-performance UI state management using CSS custom properties. 44% faster tha
 ## Installation
 
 ```bash
-npm install ui-state
+npm install uistate
 ```
 
 ## Quick Start
 
 ```typescript
-import { UIState } from 'ui-state';
+import { UIState } from 'uistate';
 
 // Initialize state
 UIState.init();
@@ -38,7 +38,7 @@ const unsubscribe = UIState.observe('count', (newValue) => {
 });
 
 // React Hook
-import { useUIState } from 'ui-state/react';
+import { useUIState } from 'uistate/react';
 
 function Counter() {
   const [count, setCount] = useUIState('count', 0);
@@ -50,7 +50,7 @@ function Counter() {
 }
 ```
 
-## Why ui-state?
+## Why uistate?
 
 ### Performance
 
@@ -68,7 +68,7 @@ function Counter() {
 ## Project Structure
 
 ```
-ui-state/
+uistate/
 ├── src/                  # Core library
 │   ├── index.ts         # Main entry
 │   ├── UIState.ts       # Core implementation
@@ -83,16 +83,16 @@ ui-state/
 
 ## Optional Packages
 
-### @ui-state/performance
+### @uistate/performance
 
 Monitor and analyze your app's performance:
 
 ```bash
-npm install @ui-state/performance
+npm install @uistate/performance
 ```
 
 ```typescript
-import { PerformanceMonitor } from '@ui-state/performance';
+import { PerformanceMonitor } from '@uistate/performance';
 
 // Start monitoring
 PerformanceMonitor.start();

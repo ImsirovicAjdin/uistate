@@ -1,5 +1,5 @@
 {
-  "name": "ui-state",
+  "name": "uistate",
   "version": "1.0.0",
   "description": "High-performance UI state management using CSS custom properties",
   "main": "dist/index.js",
@@ -27,12 +27,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ImsirovicAjdin/ui-state.git"
+    "url": "git+https://github.com/ImsirovicAjdin/uistate.git"
   },
   "bugs": {
-    "url": "https://github.com/ImsirovicAjdin/ui-state/issues"
+    "url": "https://github.com/ImsirovicAjdin/uistate/issues"
   },
-  "homepage": "https://github.com/ImsirovicAjdin/ui-state#readme",
+  "homepage": "https://github.com/ImsirovicAjdin/uistate#readme",
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },

@@ -1,6 +1,6 @@
-# Contributing to ui-state
+# Contributing to uistate
 
-First off, thank you for considering contributing to ui-state! It's people like you that make ui-state such a great tool.
+First off, thank you for considering contributing to uistate! It's people like you that make uistate such a great tool.
 
 ## Code of Conduct
 
@@ -51,7 +51,7 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 
 ```bash
 # Clone your fork
-git clone git@github.com:your-username/ui-state.git
+git clone git@github.com:your-username/uistate.git
 
 # Install dependencies
 npm install
