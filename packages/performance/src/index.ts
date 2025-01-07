@@ -1,2 +1,2 @@
-export { default as PerformanceTracker } from './PerformanceTracker';
-export { default as PerformanceDisplay } from './PerformanceDisplay';
+export { PerformanceTracker } from './PerformanceTracker';
+export { PerformanceDisplay } from './PerformanceDisplay';

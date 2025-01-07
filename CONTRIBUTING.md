@@ -1,6 +1,6 @@
-# Contributing to uistate
+# Contributing to @flowoverstack/uistate
 
-First off, thank you for considering contributing to uistate! It's people like you that make uistate such a great tool.
+First off, thank you for considering contributing to @flowoverstack/uistate! It's people like you that make our library such a great tool.
 
 ## Code of Conduct
 
@@ -61,7 +61,25 @@ npm test
 
 # Build the project
 npm run build
+
+# Build the performance package
+cd packages/performance
+npm install
+npm run build
 ```
+
+### Project Structure
+
+The project is organized into two main packages:
+
+1. `@flowoverstack/uistate`: The core state management library
+2. `@flowoverstack/uistate-performance`: Optional performance monitoring tools
+
+Each package has its own:
+- `package.json` with dependencies
+- TypeScript configuration
+- Build process
+- Tests
 
 ### Coding Style
 

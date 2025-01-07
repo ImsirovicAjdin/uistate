@@ -1,190 +1,95 @@
-interface Metric {
-    timestamp: number;
+export interface Metrics {
+    stateUpdateDuration: number;
+    renderDuration: number;
+    fps: number;
+    memoryUsage: number;
+    longTaskDuration: number;
 }
 
-interface StateUpdateMetric extends Metric {
-    action: string;
-    duration: number;
-}
+export class PerformanceTracker {
+    private static instance: PerformanceTracker;
+    private observers: ((metrics: Metrics) => void)[] = [];
+    private metrics: Metrics = {
+        stateUpdateDuration: 0,
+        renderDuration: 0,
+        fps: 0,
+        memoryUsage: 0,
+        longTaskDuration: 0
+    };
 
-interface RenderMetric extends Metric {
-    component: string;
-    duration: number;
-}
-
-interface MemoryMetric extends Metric {
-    used: number;
-    total: number;
-}
-
-interface FPSMetric extends Metric {
-    value: number;
-}
-
-interface LongTaskMetric extends Metric {
-    duration: number;
-}
-
-interface InteractionMetric extends Metric {
-    type: string;
-    duration: number;
-}
-
-interface Metrics {
-    stateUpdates: StateUpdateMetric[];
-    renders: RenderMetric[];
-    memory: MemoryMetric[];
-    interactions: InteractionMetric[];
-    fps: FPSMetric[];
-    longTasks: LongTaskMetric[];
-}
-
-type MetricsObserver = (metrics: Metrics) => void;
-
-declare global {
-    interface Performance {
-        memory?: {
-            usedJSHeapSize: number;
-            totalJSHeapSize: number;
-            jsHeapSizeLimit: number;
-        };
-    }
-}
-
-class PerformanceTracker {
-    private appName: string;
-    private metrics: Metrics;
-    private observers: Set<MetricsObserver>;
-    private startTime: number;
-
-    constructor(appName: string) {
-        this.appName = appName;
-        this.metrics = {
-            stateUpdates: [],
-            renders: [],
-            memory: [],
-            interactions: [],
-            fps: [],
-            longTasks: []
-        };
-        this.observers = new Set();
-        this.startTime = performance.now();
-        this.initObservers();
+    private constructor() {
+        // Private constructor to enforce singleton
     }
 
-    private initObservers(): void {
+    public static getInstance(): PerformanceTracker {
+        if (!PerformanceTracker.instance) {
+            PerformanceTracker.instance = new PerformanceTracker();
+        }
+        return PerformanceTracker.instance;
+    }
+
+    public addObserver(callback: (metrics: Metrics) => void): void {
+        this.observers.push(callback);
+    }
+
+    public removeObserver(callback: (metrics: Metrics) => void): void {
+        this.observers = this.observers.filter(cb => cb !== callback);
+    }
+
+    private notifyObservers(): void {
+        this.observers.forEach(observer => observer(this.metrics));
+    }
+
+    public start(): void {
+        // Track FPS
+        let frameCount = 0;
+        let lastTime = performance.now();
+
+        const measureFPS = () => {
+            const currentTime = performance.now();
+            frameCount++;
+
+            if (currentTime - lastTime >= 1000) {
+                this.metrics.fps = frameCount;
+                frameCount = 0;
+                lastTime = currentTime;
+                this.notifyObservers();
+            }
+
+            requestAnimationFrame(measureFPS);
+        };
+
+        requestAnimationFrame(measureFPS);
+
         // Track long tasks
         const observer = new PerformanceObserver((list) => {
             for (const entry of list.getEntries()) {
-                this.metrics.longTasks.push({
-                    duration: entry.duration,
-                    timestamp: performance.now() - this.startTime
-                });
+                this.metrics.longTaskDuration = entry.duration;
                 this.notifyObservers();
             }
         });
+
         observer.observe({ entryTypes: ['longtask'] });
 
-        // Track FPS
-        let lastTime = performance.now();
-        let frames = 0;
-        const measureFPS = () => {
-            const now = performance.now();
-            frames++;
-            
-            if (now - lastTime >= 1000) {
-                const fps = Math.round((frames * 1000) / (now - lastTime));
-                this.metrics.fps.push({
-                    value: fps,
-                    timestamp: now - this.startTime
-                });
-                frames = 0;
-                lastTime = now;
-                this.notifyObservers();
-            }
-            
-            requestAnimationFrame(measureFPS);
-        };
-        requestAnimationFrame(measureFPS);
-
         // Track memory
-        if (performance.memory) {
+        if ((performance as any).memory) {
             setInterval(() => {
-                this.metrics.memory.push({
-                    used: performance.memory.usedJSHeapSize / 1048576,
-                    total: performance.memory.totalJSHeapSize / 1048576,
-                    timestamp: performance.now() - this.startTime
-                });
+                const memory = (performance as any).memory;
+                if (memory) {
+                    this.metrics.memoryUsage = memory.usedJSHeapSize;
+                }
                 this.notifyObservers();
             }, 1000);
         }
     }
 
-    public trackStateUpdate(action: string, duration: number): void {
-        this.metrics.stateUpdates.push({
-            action,
-            duration,
-            timestamp: performance.now() - this.startTime
-        });
+    public trackStateUpdate(duration: number): void {
+        this.metrics.stateUpdateDuration = duration;
         this.notifyObservers();
     }
 
-    public trackRender(component: string, duration: number): void {
-        this.metrics.renders.push({
-            component,
-            duration,
-            timestamp: performance.now() - this.startTime
-        });
+    public trackRender(duration: number): void {
+        this.metrics.renderDuration = duration;
         this.notifyObservers();
-    }
-
-    public trackInteraction(type: string, duration: number): void {
-        this.metrics.interactions.push({
-            type,
-            duration,
-            timestamp: performance.now() - this.startTime
-        });
-        this.notifyObservers();
-    }
-
-    public subscribe(callback: MetricsObserver): () => void {
-        this.observers.add(callback);
-        return () => this.observers.delete(callback);
-    }
-
-    private notifyObservers(): void {
-        this.observers.forEach(callback => callback(this.getMetrics()));
-    }
-
-    public getMetrics(): Metrics {
-        return {
-            stateUpdates: [...this.metrics.stateUpdates],
-            renders: [...this.metrics.renders],
-            memory: [...this.metrics.memory],
-            interactions: [...this.metrics.interactions],
-            fps: [...this.metrics.fps],
-            longTasks: [...this.metrics.longTasks]
-        };
-    }
-
-    public getAverages(): Record<string, number> {
-        return {
-            stateUpdateDuration: this.average(this.metrics.stateUpdates, 'duration'),
-            renderDuration: this.average(this.metrics.renders, 'duration'),
-            fps: this.average(this.metrics.fps, 'value'),
-            memoryUsage: this.average(this.metrics.memory, 'used'),
-            longTaskDuration: this.average(this.metrics.longTasks, 'duration')
-        };
-    }
-
-    private average<T extends { [key: string]: any }>(
-        array: T[],
-        key: keyof T
-    ): number {
-        if (array.length === 0) return 0;
-        const sum = array.reduce((acc, item) => acc + Number(item[key]), 0);
-        return sum / array.length;
     }
 }
-
-export default PerformanceTracker;

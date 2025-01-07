@@ -11,11 +11,16 @@ High-performance UI state management using CSS custom properties. 44% faster tha
 - 🎨 Framework agnostic
 - 📦 Tiny bundle size (~1KB)
 - 💪 Full TypeScript support
+- 📊 Optional performance monitoring
 
 ## Installation
 
 ```bash
+# Install the core package
 npm install @flowoverstack/uistate
+
+# Optional: Install performance monitoring
+npm install @flowoverstack/uistate-performance
 ```
 
 ## Quick Start
@@ -65,6 +70,36 @@ function Counter() {
 - **Framework Agnostic**: Works with any framework
 - **Zero Config**: No store setup, no reducers, no actions
 
+## Performance Monitoring
+
+The `@flowoverstack/uistate-performance` package provides detailed performance metrics for your application:
+
+```typescript
+import { PerformanceTracker } from '@flowoverstack/uistate-performance';
+import { PerformanceDisplay } from '@flowoverstack/uistate-performance';
+
+// Start tracking performance
+const tracker = PerformanceTracker.getInstance();
+tracker.start();
+
+// Optional: Add the performance display component to your React app
+function App() {
+  return (
+    <div>
+      <YourApp />
+      <PerformanceDisplay />
+    </div>
+  );
+}
+```
+
+The performance tracker monitors:
+- State update duration
+- Component render time
+- FPS (Frames Per Second)
+- Memory usage
+- Long task duration
+
 ## Project Structure
 
 ```
@@ -74,41 +109,23 @@ function Counter() {
 │   ├── UIState.ts       # Core implementation
 │   └── react/           # React bindings
 │       └── index.ts     # React hooks
-├── examples/            # Example applications
-│   ├── traditional/     # Traditional Redux app
-│   └── uistate/        # UIState implementation
-└── packages/
-    └── performance/     # Optional performance monitoring
-```
-
-## Optional Packages
-
-### @flowoverstack/uistate-performance
-
-Monitor and analyze your app's performance:
-
-```bash
-npm install @flowoverstack/uistate-performance
-```
-
-```typescript
-import { PerformanceMonitor } from '@flowoverstack/uistate-performance';
-
-// Start monitoring
-PerformanceMonitor.start();
+├── packages/
+│   └── performance/     # Performance monitoring package
+└── examples/            # Example applications
+    ├── traditional/     # Traditional Redux app
+    └── uistate/        # UIState implementation
 ```
 
 ## Browser Support
 
-Works in all modern browsers that support CSS Custom Properties (CSS Variables):
-- Chrome 49+
-- Firefox 31+
-- Safari 9.1+
-- Edge 15+
+- Chrome 60+
+- Firefox 54+
+- Safari 10.1+
+- Edge 79+
 
 ## Contributing
 
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
 
 ## License
 
