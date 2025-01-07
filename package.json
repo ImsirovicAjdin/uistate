@@ -1,5 +1,5 @@
 {
-  "name": "uistate",
+  "name": "@flowoverstack/uistate",
   "version": "1.0.0",
   "description": "High-performance UI state management using CSS custom properties",
   "main": "dist/index.js",

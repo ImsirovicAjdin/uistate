@@ -1,4 +1,4 @@
-# uistate
+# @flowoverstack/uistate
 
 High-performance UI state management using CSS custom properties. 44% faster than traditional state management solutions with 12.5% lower memory usage.
 
@@ -15,13 +15,13 @@ High-performance UI state management using CSS custom properties. 44% faster tha
 ## Installation
 
 ```bash
-npm install uistate
+npm install @flowoverstack/uistate
 ```
 
 ## Quick Start
 
 ```typescript
-import { UIState } from 'uistate';
+import { UIState } from '@flowoverstack/uistate';
 
 // Initialize state
 UIState.init();
@@ -38,7 +38,7 @@ const unsubscribe = UIState.observe('count', (newValue) => {
 });
 
 // React Hook
-import { useUIState } from 'uistate/react';
+import { useUIState } from '@flowoverstack/uistate/react';
 
 function Counter() {
   const [count, setCount] = useUIState('count', 0);
@@ -50,7 +50,7 @@ function Counter() {
 }
 ```
 
-## Why uistate?
+## Why @flowoverstack/uistate?
 
 ### Performance
 
@@ -68,7 +68,7 @@ function Counter() {
 ## Project Structure
 
 ```
-uistate/
+@flowoverstack/uistate/
 ├── src/                  # Core library
 │   ├── index.ts         # Main entry
 │   ├── UIState.ts       # Core implementation
@@ -83,16 +83,16 @@ uistate/
 
 ## Optional Packages
 
-### @uistate/performance
+### @flowoverstack/uistate-performance
 
 Monitor and analyze your app's performance:
 
 ```bash
-npm install @uistate/performance
+npm install @flowoverstack/uistate-performance
 ```
 
 ```typescript
-import { PerformanceMonitor } from '@uistate/performance';
+import { PerformanceMonitor } from '@flowoverstack/uistate-performance';
 
 // Start monitoring
 PerformanceMonitor.start();
