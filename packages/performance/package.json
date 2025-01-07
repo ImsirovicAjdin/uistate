@@ -1,0 +1,16 @@
+{
+  "name": "@ui-state/performance",
+  "version": "1.0.0",
+  "description": "Performance monitoring tools for ui-state",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "test": "jest"
+  },
+  "peerDependencies": {
+    "ui-state": "^1.0.0",
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+  }
+}
