@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import UIState from '../UIState';
 
-export function useUIState<T>(key: string, initialValue?: T): [T, (value: T) => void] {
+export function useUIState<T>(key: string, initialValue: T): [T, (value: T) => void] {
     // Initialize UIState if needed
     useEffect(() => {
         UIState.init();
@@ -10,9 +10,10 @@ export function useUIState<T>(key: string, initialValue?: T): [T, (value: T) => 
     // Get initial state
     const [state, setState] = useState<T>(() => {
         try {
-            return UIState.getState<T>(key) ?? initialValue;
+            const value = UIState.getState<T>(key);
+            return value !== undefined ? value : initialValue;
         } catch {
-            return initialValue as T;
+            return initialValue;
         }
     });
 
