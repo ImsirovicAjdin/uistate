@@ -123,6 +123,73 @@ The performance tracker monitors:
 - Safari 10.1+
 - Edge 79+
 
+# Explanation of the Core Ideas Behind the UI State Management System
+
+A TypeScript-based UI state management system that leverages CSS custom properties (CSS variables) as the storage mechanism.
+
+## Key Components
+
+### Type Definitions
+
+```typescript
+type StateObserver<T> = (value: T) => void;
+interface UIStateType { ... }
+```
+
+- Defines a type for state change observers (callbacks)
+- Defines the interface for the state management system
+
+## Core Functionality
+
+The `UIState` object provides several key methods:
+
+### `init()`
+- Creates a style element in the document head
+- Initializes a CSS stylesheet for managing custom properties
+- Returns the UIState instance for chaining
+
+### `setState<T>(key: string, value: T)`
+- Stores values as CSS custom properties (--key)
+- Converts non-string values to JSON strings
+- Notifies observers when values change
+
+### `getState<T>(key: string)`
+- Retrieves values from CSS custom properties
+- Attempts to parse JSON values back to their original type
+- Falls back to raw string if parsing fails
+
+### `observe<T>(key: string, callback)`
+- Implements an observer pattern for state changes
+- Returns a cleanup function to remove the observer
+- Allows multiple observers per state key
+
+## Internal Mechanisms
+
+```typescript
+_sheet: CSSStyleSheet | null        // Stores the stylesheet reference
+_observers: Map<string, Set<StateObserver>>  // Stores observers per key
+```
+
+## Key Features
+
+1. Uses CSS custom properties as a storage mechanism, making state changes automatically trigger UI updates
+2. Provides type safety through TypeScript generics
+3. Implements the observer pattern for reactive updates
+4. Handles serialization/deserialization of complex data types through JSON
+
+## Example Usage
+
+```typescript
+UIState.init();
+UIState.setState('theme', 'dark');
+UIState.observe('theme', (newValue) => {
+    console.log('Theme changed to:', newValue);
+});
+const currentTheme = UIState.getState<string>('theme');
+```
+
+This implementation is particularly useful for managing global UI state like themes, layout preferences, or any other state that might affect multiple components simultaneously.
+
 ## Contributing
 
 We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
