@@ -1,0 +1,175 @@
+/* State-driven styling for the range-slider example */
+
+/* Using CSS variables for slider position */
+:root {
+  --slider-position: 50%;
+}
+
+/* Apply the position from CSS variable to the slider components */
+.range-fill {
+  width: var(--slider-position);
+}
+
+.range-thumb {
+  left: var(--slider-position);
+}
+
+/* Derived state: intensity levels based on value ranges */
+.range-slider-container[data-uis-value="0"],
+.range-slider-container[data-uis-value="1"],
+.range-slider-container[data-uis-value="2"],
+.range-slider-container[data-uis-value="3"],
+.range-slider-container[data-uis-value="4"],
+.range-slider-container[data-uis-value="5"],
+.range-slider-container[data-uis-value="6"],
+.range-slider-container[data-uis-value="7"],
+.range-slider-container[data-uis-value="8"],
+.range-slider-container[data-uis-value="9"],
+.range-slider-container[data-uis-value="10"] {
+  --intensity-level: "muted";
+}
+
+.range-slider-container[data-uis-value="11"],
+.range-slider-container[data-uis-value="12"],
+.range-slider-container[data-uis-value="13"],
+.range-slider-container[data-uis-value="14"],
+.range-slider-container[data-uis-value="15"],
+.range-slider-container[data-uis-value="16"],
+.range-slider-container[data-uis-value="17"],
+.range-slider-container[data-uis-value="18"],
+.range-slider-container[data-uis-value="19"],
+.range-slider-container[data-uis-value="20"],
+.range-slider-container[data-uis-value="21"],
+.range-slider-container[data-uis-value="22"],
+.range-slider-container[data-uis-value="23"],
+.range-slider-container[data-uis-value="24"],
+.range-slider-container[data-uis-value="25"],
+.range-slider-container[data-uis-value="26"],
+.range-slider-container[data-uis-value="27"],
+.range-slider-container[data-uis-value="28"],
+.range-slider-container[data-uis-value="29"],
+.range-slider-container[data-uis-value="30"] {
+  --intensity-level: "low";
+}
+
+.range-slider-container[data-uis-value="31"],
+.range-slider-container[data-uis-value="32"],
+.range-slider-container[data-uis-value="33"],
+.range-slider-container[data-uis-value="34"],
+.range-slider-container[data-uis-value="35"],
+.range-slider-container[data-uis-value="36"],
+.range-slider-container[data-uis-value="37"],
+.range-slider-container[data-uis-value="38"],
+.range-slider-container[data-uis-value="39"],
+.range-slider-container[data-uis-value="40"],
+.range-slider-container[data-uis-value="41"],
+.range-slider-container[data-uis-value="42"],
+.range-slider-container[data-uis-value="43"],
+.range-slider-container[data-uis-value="44"],
+.range-slider-container[data-uis-value="45"],
+.range-slider-container[data-uis-value="46"],
+.range-slider-container[data-uis-value="47"],
+.range-slider-container[data-uis-value="48"],
+.range-slider-container[data-uis-value="49"],
+.range-slider-container[data-uis-value="50"],
+.range-slider-container[data-uis-value="51"],
+.range-slider-container[data-uis-value="52"],
+.range-slider-container[data-uis-value="53"],
+.range-slider-container[data-uis-value="54"],
+.range-slider-container[data-uis-value="55"],
+.range-slider-container[data-uis-value="56"],
+.range-slider-container[data-uis-value="57"],
+.range-slider-container[data-uis-value="58"],
+.range-slider-container[data-uis-value="59"],
+.range-slider-container[data-uis-value="60"],
+.range-slider-container[data-uis-value="61"],
+.range-slider-container[data-uis-value="62"],
+.range-slider-container[data-uis-value="63"],
+.range-slider-container[data-uis-value="64"],
+.range-slider-container[data-uis-value="65"],
+.range-slider-container[data-uis-value="66"],
+.range-slider-container[data-uis-value="67"],
+.range-slider-container[data-uis-value="68"],
+.range-slider-container[data-uis-value="69"],
+.range-slider-container[data-uis-value="70"] {
+  --intensity-level: "medium";
+}
+
+.range-slider-container[data-uis-value="71"],
+.range-slider-container[data-uis-value="72"],
+.range-slider-container[data-uis-value="73"],
+.range-slider-container[data-uis-value="74"],
+.range-slider-container[data-uis-value="75"],
+.range-slider-container[data-uis-value="76"],
+.range-slider-container[data-uis-value="77"],
+.range-slider-container[data-uis-value="78"],
+.range-slider-container[data-uis-value="79"],
+.range-slider-container[data-uis-value="80"],
+.range-slider-container[data-uis-value="81"],
+.range-slider-container[data-uis-value="82"],
+.range-slider-container[data-uis-value="83"],
+.range-slider-container[data-uis-value="84"],
+.range-slider-container[data-uis-value="85"] {
+  --intensity-level: "high";
+}
+
+.range-slider-container[data-uis-value="86"],
+.range-slider-container[data-uis-value="87"],
+.range-slider-container[data-uis-value="88"],
+.range-slider-container[data-uis-value="89"],
+.range-slider-container[data-uis-value="90"],
+.range-slider-container[data-uis-value="91"],
+.range-slider-container[data-uis-value="92"],
+.range-slider-container[data-uis-value="93"],
+.range-slider-container[data-uis-value="94"],
+.range-slider-container[data-uis-value="95"],
+.range-slider-container[data-uis-value="96"],
+.range-slider-container[data-uis-value="97"],
+.range-slider-container[data-uis-value="98"],
+.range-slider-container[data-uis-value="99"],
+.range-slider-container[data-uis-value="100"] {
+  --intensity-level: "maximum";
+}
+
+/* Apply styles based on intensity level */
+.range-slider-container[style*="--intensity-level: \"muted\""] .range-fill {
+  background-color: #95a5a6;
+}
+
+.range-slider-container[style*="--intensity-level: \"low\""] .range-fill {
+  background-color: #3498db;
+}
+
+.range-slider-container[style*="--intensity-level: \"medium\""] .range-fill {
+  background-color: #2980b9;
+}
+
+.range-slider-container[style*="--intensity-level: \"high\""] .range-fill {
+  background-color: #e67e22;
+}
+
+.range-slider-container[style*="--intensity-level: \"maximum\""] .range-fill {
+  background-color: #e74c3c;
+}
+
+/* Apply styles to the value display based on intensity level */
+.range-slider-container[style*="--intensity-level: \"muted\""] .value-display {
+  color: #95a5a6;
+}
+
+.range-slider-container[style*="--intensity-level: \"low\""] .value-display {
+  color: #3498db;
+}
+
+.range-slider-container[style*="--intensity-level: \"medium\""] .value-display {
+  color: #2980b9;
+}
+
+.range-slider-container[style*="--intensity-level: \"high\""] .value-display {
+  color: #e67e22;
+}
+
+.range-slider-container[style*="--intensity-level: \"maximum\""] .value-display {
+  color: #e74c3c;
+  font-weight: 700;
+}

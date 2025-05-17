@@ -1,0 +1,173 @@
+/* State-driven styling for the font-adjuster-slider example */
+
+/* CSS Variables for state-driven properties */
+:root {
+  --slider-position: 50%;
+  --font-size: 16px;
+}
+
+/* Apply the position from CSS variable to the slider components */
+.range-fill {
+  width: var(--slider-position);
+}
+
+.range-thumb {
+  left: var(--slider-position);
+}
+
+/* Apply font size to the sample text */
+.sample-text {
+  font-size: var(--font-size);
+}
+
+/* Derived state: text size categories based on font size */
+.font-adjuster-container[data-uis-fontsize="8"],
+.font-adjuster-container[data-uis-fontsize="9"],
+.font-adjuster-container[data-uis-fontsize="10"] {
+  --text-size-category: "extra-small";
+}
+
+.font-adjuster-container[data-uis-fontsize="11"],
+.font-adjuster-container[data-uis-fontsize="12"],
+.font-adjuster-container[data-uis-fontsize="13"],
+.font-adjuster-container[data-uis-fontsize="14"] {
+  --text-size-category: "small";
+}
+
+.font-adjuster-container[data-uis-fontsize="15"],
+.font-adjuster-container[data-uis-fontsize="16"],
+.font-adjuster-container[data-uis-fontsize="17"],
+.font-adjuster-container[data-uis-fontsize="18"] {
+  --text-size-category: "medium";
+}
+
+.font-adjuster-container[data-uis-fontsize="19"],
+.font-adjuster-container[data-uis-fontsize="20"],
+.font-adjuster-container[data-uis-fontsize="21"],
+.font-adjuster-container[data-uis-fontsize="22"],
+.font-adjuster-container[data-uis-fontsize="23"],
+.font-adjuster-container[data-uis-fontsize="24"] {
+  --text-size-category: "large";
+}
+
+.font-adjuster-container[data-uis-fontsize="25"],
+.font-adjuster-container[data-uis-fontsize="26"],
+.font-adjuster-container[data-uis-fontsize="27"],
+.font-adjuster-container[data-uis-fontsize="28"],
+.font-adjuster-container[data-uis-fontsize="29"],
+.font-adjuster-container[data-uis-fontsize="30"],
+.font-adjuster-container[data-uis-fontsize="31"],
+.font-adjuster-container[data-uis-fontsize="32"] {
+  --text-size-category: "extra-large";
+}
+
+/* Apply styles based on text size category */
+.font-adjuster-container[style*="--text-size-category: \"extra-small\""] .status-text {
+  color: #95a5a6;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"small\""] .status-text {
+  color: #3498db;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"medium\""] .status-text {
+  color: #2ecc71;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"large\""] .status-text {
+  color: #e67e22;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"extra-large\""] .status-text {
+  color: #e74c3c;
+}
+
+/* Apply styles to the status indicator based on text size category */
+.font-adjuster-container[style*="--text-size-category: \"extra-small\""] .status-indicator {
+  border-left-color: #95a5a6;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"small\""] .status-indicator {
+  border-left-color: #3498db;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"medium\""] .status-indicator {
+  border-left-color: #2ecc71;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"large\""] .status-indicator {
+  border-left-color: #e67e22;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"extra-large\""] .status-indicator {
+  border-left-color: #e74c3c;
+}
+
+/* Apply styles to the slider based on text size category */
+.font-adjuster-container[style*="--text-size-category: \"extra-small\""] .range-fill {
+  background-color: #95a5a6;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"small\""] .range-fill {
+  background-color: #3498db;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"medium\""] .range-fill {
+  background-color: #2ecc71;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"large\""] .range-fill {
+  background-color: #e67e22;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"extra-large\""] .range-fill {
+  background-color: #e74c3c;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"extra-small\""] .range-thumb {
+  border-color: #95a5a6;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"small\""] .range-thumb {
+  border-color: #3498db;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"medium\""] .range-thumb {
+  border-color: #2ecc71;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"large\""] .range-thumb {
+  border-color: #e67e22;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"extra-large\""] .range-thumb {
+  border-color: #e74c3c;
+}
+
+/* Enhanced typography for different text size categories */
+.font-adjuster-container[style*="--text-size-category: \"extra-small\""] .sample-text {
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"small\""] .sample-text {
+  line-height: 1.5;
+  letter-spacing: 0.005em;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"medium\""] .sample-text {
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"large\""] .sample-text {
+  line-height: 1.7;
+  letter-spacing: -0.005em;
+  font-weight: 500;
+}
+
+.font-adjuster-container[style*="--text-size-category: \"extra-large\""] .sample-text {
+  line-height: 1.8;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+}

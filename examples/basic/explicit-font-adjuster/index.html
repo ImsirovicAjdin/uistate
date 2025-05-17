@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explicit Font Adjuster - UIstate Example</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="state.css">
+</head>
+<body>
+  <h1>Explicit Font Adjuster Example</h1>
+  <p><a href="../../../docs/examples/explicit-font-adjuster.html">Docs</a></p>
+  
+  <div class="explicit-adjuster-container" data-uis-value="16">
+    <div class="size-categories">
+      <div class="size-category" data-category="small">
+        <span class="category-label">Small</span>
+      </div>
+      <div class="size-category" data-category="medium">
+        <span class="category-label">Medium</span>
+      </div>
+      <div class="size-category" data-category="large">
+        <span class="category-label">Large</span>
+      </div>
+      <div class="size-category" data-category="x-large">
+        <span class="category-label">X-Large</span>
+      </div>
+    </div>
+    
+    <div class="slider-track">
+      <div class="slider-fill"></div>
+      <div class="slider-thumb"></div>
+    </div>
+    
+    <div class="value-display">
+      <div class="current-value"><span id="size-value">16</span>px</div>
+      <div class="current-category"></div>
+    </div>
+    
+    <div class="font-preview-panel">
+      <h3>Text Preview</h3>
+      <div class="font-preview">
+        <p>The quick brown fox jumps over the lazy dog. Pack my box with five dozen liquor jugs.</p>
+        <p>Almost before we knew it, we had left the ground. A shining crescent far beneath the flying vessel.</p>
+      </div>
+    </div>
+    
+    <div class="font-info-panel">
+      <div class="info-description">
+        <h3 class="info-title">Medium Text</h3>
+        <p class="info-text">Standard reading size suitable for most web content and documents.</p>
+      </div>
+      <div class="info-icon"></div>
+    </div>
+  </div>
+
+  <script>
+    // Get references to elements
+    const container = document.querySelector('.explicit-adjuster-container');
+    const valueDisplay = document.getElementById('size-value');
+    const thumb = document.querySelector('.slider-thumb');
+    const track = document.querySelector('.slider-track');
+    const fill = document.querySelector('.slider-fill');
+    const fontPreview = document.querySelector('.font-preview');
+    
+    // Min/max size values
+    const MIN_SIZE = 8;
+    const MAX_SIZE = 32;
+    
+    // Size category definitions
+    const categories = [
+      { name: 'small', min: 8, max: 12 },
+      { name: 'medium', min: 13, max: 18 },
+      { name: 'large', min: 19, max: 24 },
+      { name: 'x-large', min: 25, max: 32 }
+    ];
+    
+    // Initialize
+    updateSliderPosition();
+    updateFontSize();
+    
+    // Add event listeners for mouse/touch interactions
+    thumb.addEventListener('mousedown', startDrag);
+    track.addEventListener('click', jumpToPosition);
+    
+    // Add event listeners for category clicks
+    document.querySelectorAll('.size-category').forEach(category => {
+      category.addEventListener('click', (e) => {
+        // Prevent this from triggering the track click event
+        e.stopPropagation();
+        
+        const categoryName = category.dataset.category;
+        const categoryObj = categories.find(c => c.name === categoryName);
+        if (categoryObj) {
+          const midValue = Math.floor((categoryObj.min + categoryObj.max) / 2);
+          container.setAttribute('data-uis-value', midValue);
+          updateSliderPosition();
+          updateFontSize();
+        }
+      });
+    });
+    
+    // Function to start dragging the thumb
+    function startDrag(e) {
+      e.preventDefault();
+      
+      // Calculate starting positions
+      const startX = e.clientX;
+      const startValue = parseInt(container.getAttribute('data-uis-value'));
+      const trackRect = track.getBoundingClientRect();
+      
+      // Add event listeners for moving and releasing
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('mouseup', stopDrag);
+      
+      function drag(e) {
+        // Calculate new value based on drag distance
+        const dx = e.clientX - startX;
+        const trackWidth = trackRect.width;
+        const valueDelta = Math.round((dx / trackWidth) * (MAX_SIZE - MIN_SIZE));
+        let newValue = startValue + valueDelta;
+        
+        // Constrain to min/max
+        newValue = Math.max(MIN_SIZE, Math.min(MAX_SIZE, newValue));
+        
+        // Update the attribute
+        container.setAttribute('data-uis-value', newValue);
+        
+        // Update the UI
+        updateSliderPosition();
+        updateFontSize();
+      }
+      
+      function stopDrag() {
+        // Remove event listeners
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('mouseup', stopDrag);
+      }
+    }
+    
+    // Function to jump to clicked position
+    function jumpToPosition(e) {
+      const trackRect = track.getBoundingClientRect();
+      const clickPosition = e.clientX - trackRect.left;
+      const trackWidth = trackRect.width;
+      
+      // Calculate value based on click position
+      const value = Math.round(MIN_SIZE + (clickPosition / trackWidth) * (MAX_SIZE - MIN_SIZE));
+      
+      // Update the attribute
+      container.setAttribute('data-uis-value', value);
+      
+      // Update the UI
+      updateSliderPosition();
+      updateFontSize();
+    }
+    
+    // Function to update slider position based on data attribute
+    function updateSliderPosition() {
+      const value = parseInt(container.getAttribute('data-uis-value'));
+      
+      // Update size value display
+      valueDisplay.textContent = value;
+      
+      // Calculate percentage
+      const percentage = ((value - MIN_SIZE) / (MAX_SIZE - MIN_SIZE)) * 100;
+      
+      // Set slider position
+      fill.style.width = `${percentage}%`;
+      thumb.style.left = `${percentage}%`;
+    }
+    
+    // Function to update font size in the preview panel
+    function updateFontSize() {
+      const value = parseInt(container.getAttribute('data-uis-value'));
+      fontPreview.style.fontSize = `${value}px`;
+    }
+  </script>
+</body>
+</html>

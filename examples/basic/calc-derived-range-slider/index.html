@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calc-Derived Range Slider - UIstate Example</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="state.css">
+</head>
+<body>
+  <h1>Calc-Derived Range Slider Example</h1>
+  <p><a href="../../../docs/examples/calc-derived-range-slider.html">Docs</a></p>
+  
+  <!-- The slider container with just the core value attribute -->
+  <div class="calc-slider-container" data-uis-value="50" data-uis-min="0" data-uis-max="100">
+    <!-- Domain visualization with pure CSS-driven active state -->
+    <div class="domain-sections">
+      <div class="domain-section" data-domain="muted">
+        <span class="domain-label">Muted</span>
+      </div>
+      <div class="domain-section" data-domain="low">
+        <span class="domain-label">Low</span>
+      </div>
+      <div class="domain-section" data-domain="medium">
+        <span class="domain-label">Medium</span>
+      </div>
+      <div class="domain-section" data-domain="high">
+        <span class="domain-label">High</span>
+      </div>
+      <div class="domain-section" data-domain="maximum">
+        <span class="domain-label">Maximum</span>
+      </div>
+    </div>
+    
+    <!-- Standard slider track and thumb -->
+    <div class="slider-track">
+      <div class="slider-fill"></div>
+      <div class="slider-thumb"></div>
+    </div>
+    
+    <!-- Value display - values will be populated with CSS counters -->
+    <div class="value-display">
+      <div class="current-value"></div>
+      <div class="current-domain"></div>
+    </div>
+    
+    <!-- Domain feedback that responds to CSS-calculated domain -->
+    <div class="domain-indicator">
+      <div class="domain-description">
+        <h3 class="domain-title"></h3>
+        <p class="domain-text"></p>
+      </div>
+      <div class="domain-icon"></div>
+    </div>
+  </div>
+
+  <script>
+    // Get references to elements
+    const container = document.querySelector('.calc-slider-container');
+    const thumb = document.querySelector('.slider-thumb');
+    const track = document.querySelector('.slider-track');
+    
+    // Add event listeners for mouse/touch interactions
+    thumb.addEventListener('mousedown', startDrag);
+    track.addEventListener('click', jumpToPosition);
+    
+    // Add event listeners for domain section clicks
+    document.querySelectorAll('.domain-section').forEach((section, index) => {
+      section.addEventListener('click', (e) => {
+        // Prevent this from triggering the track click event
+        e.stopPropagation();
+        
+        // Set value to middle of clicked domain
+        // Domain boundaries are defined in CSS, but we can approximate them here
+        const domains = [
+          { start: 0, end: 10 },    // muted
+          { start: 11, end: 30 },   // low
+          { start: 31, end: 70 },   // medium
+          { start: 71, end: 85 },   // high
+          { start: 86, end: 100 }   // maximum
+        ];
+        
+        const midValue = Math.floor((domains[index].start + domains[index].end) / 2);
+        container.setAttribute('data-uis-value', midValue);
+        
+        // CSS will handle all the state updates!
+        updateSliderPosition();
+      });
+    });
+    
+    // Function to start dragging the thumb
+    function startDrag(e) {
+      e.preventDefault();
+      
+      // Calculate starting positions
+      const startX = e.clientX;
+      const startValue = parseInt(container.getAttribute('data-uis-value'));
+      const min = parseInt(container.getAttribute('data-uis-min'));
+      const max = parseInt(container.getAttribute('data-uis-max'));
+      const trackRect = track.getBoundingClientRect();
+      
+      // Add event listeners for moving and releasing
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('mouseup', stopDrag);
+      
+      function drag(e) {
+        // Calculate new value based on drag distance
+        const dx = e.clientX - startX;
+        const trackWidth = trackRect.width;
+        const valueDelta = Math.round((dx / trackWidth) * (max - min));
+        let newValue = startValue + valueDelta;
+        
+        // Constrain to min/max
+        newValue = Math.max(min, Math.min(max, newValue));
+        
+        // Update the attribute - CSS takes care of the rest!
+        container.setAttribute('data-uis-value', newValue);
+        
+        // Update the slider position
+        updateSliderPosition();
+      }
+      
+      function stopDrag() {
+        // Remove event listeners
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('mouseup', stopDrag);
+      }
+    }
+    
+    // Function to jump to clicked position
+    function jumpToPosition(e) {
+      const trackRect = track.getBoundingClientRect();
+      const clickPosition = e.clientX - trackRect.left;
+      const trackWidth = trackRect.width;
+      
+      // Calculate value based on click position
+      const min = parseInt(container.getAttribute('data-uis-min'));
+      const max = parseInt(container.getAttribute('data-uis-max'));
+      const value = Math.round(min + (clickPosition / trackWidth) * (max - min));
+      
+      // Update the attribute - CSS takes care of the rest!
+      container.setAttribute('data-uis-value', value);
+      
+      // Update the slider position
+      updateSliderPosition();
+    }
+    
+    // Function to update slider position based on data attribute
+    function updateSliderPosition() {
+      // We still need this minimal JS just to convert the data attribute to a CSS variable
+      // This is our only "bridge" between the HTML attribute and the CSS calculations
+      const value = parseInt(container.getAttribute('data-uis-value'));
+      const min = parseInt(container.getAttribute('data-uis-min'));
+      const max = parseInt(container.getAttribute('data-uis-max'));
+      
+      // Calculate percentage position
+      const percentage = ((value - min) / (max - min)) * 100;
+      
+      // Set a CSS custom property that triggers all our calc() magic
+      document.documentElement.style.setProperty('--slider-raw-value', value);
+      document.documentElement.style.setProperty('--slider-position', `${percentage}%`);
+      
+      // Determine which domain the current value belongs to
+      const domains = [
+        { name: 'muted', label: 'Muted', title: 'Muted', start: 0, end: 10, 
+          description: 'Very subtle effect, barely noticeable.' },
+        { name: 'low', label: 'Low', title: 'Low Intensity', start: 11, end: 30, 
+          description: 'Light effect, suitable for background use.' },
+        { name: 'medium', label: 'Medium', title: 'Medium Intensity', start: 31, end: 70, 
+          description: 'This represents a moderate level suitable for regular use.' },
+        { name: 'high', label: 'High', title: 'High Intensity', start: 71, end: 85, 
+          description: 'Strong effect, good for emphasis and highlights.' },
+        { name: 'maximum', label: 'Maximum', title: 'Maximum Intensity', start: 86, end: 100, 
+          description: 'Maximum intensity, use sparingly for critical elements.' }
+      ];
+      
+      const activeDomain = domains.find(d => value >= d.start && value <= d.end);
+      
+      // Update data attributes for CSS to use with attr()
+      if (activeDomain) {
+        // Set data attributes for display elements
+        document.querySelector('.current-value').setAttribute('data-value', value);
+        document.querySelector('.current-domain').setAttribute('data-domain', activeDomain.label);
+        document.querySelector('.domain-title').setAttribute('data-title', activeDomain.title);
+        document.querySelector('.domain-text').setAttribute('data-description', activeDomain.description);
+      }
+    }
+    
+    // Initialize
+    updateSliderPosition();
+  </script>
+</body>
+</html>

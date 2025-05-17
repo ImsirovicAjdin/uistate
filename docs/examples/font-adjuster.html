@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Font Adjuster - UIstate Documentation</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>UIstate Documentation</h1>
+      <nav>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../getting-started.html">Getting Started</a></li>
+          <li><a href="../examples/index.html" class="active">Examples</a></li>
+          <li><a href="../api.html">API</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Font Adjuster Example</h1>
+    
+    <p>This documentation explains the Font Adjuster example, which demonstrates how to use numeric state values and CSS variables to create a simple font size adjuster. This example builds on the concepts from the <a href="derived-toggle-state.html">Derived Toggle State</a> example.</p>
+    
+    <p><a href="../../examples/basic/font-adjuster/index.html">View the live example</a></p>
+    
+    <div class="concept">
+      <h2>Core Concept: Numeric State with CSS Variables</h2>
+      <p>Building on the foundation of derived state, this example shows how to:</p>
+      <ul>
+        <li>Use data attributes to store numeric state values</li>
+        <li>Map those values to CSS variables for styling</li>
+        <li>Create derived state based on numeric ranges</li>
+        <li>Implement interactive controls that update state</li>
+      </ul>
+    </div>
+
+    <div class="example-walkthrough">
+      <h2>Interactive Walkthrough</h2>
+      <p>This example builds on the concepts from the <a href="derived-toggle-state.html">Derived Toggle State</a> example. If you haven't completed that example yet, please do so first.</p>
+      
+      <p>Let's create a simple font size adjuster with plus and minus buttons. First, add this HTML structure:</p>
+      <pre><code class="language-html">
+&lt;div class="font-adjuster" data-uis-fontsize="26"&gt;
+  &lt;div class="controls"&gt;
+    &lt;button class="control-button" data-uis-action="decrease"&gt;-&lt;/button&gt;
+    &lt;span class="size-display"&gt;26px&lt;/span&gt;
+    &lt;button class="control-button" data-uis-action="increase"&gt;+&lt;/button&gt;
+  &lt;/div&gt;
+  
+  &lt;p class="sample-text"&gt;This is a sample text that demonstrates font size changes.&lt;/p&gt;
+&lt;/div&gt;
+      </code></pre>
+
+      <p>Next, add the CSS that defines how the font size is applied using CSS variables:</p>
+      <pre><code class="language-css">
+/* Using CSS variables for font size */
+:root {
+  --font-size: 26px;
+}
+
+/* Apply the font size from CSS variable to the sample text */
+.sample-text {
+  font-size: var(--font-size);
+}
+
+/* Disable decrease button when at minimum size */
+.font-adjuster[data-uis-fontsize="10"] [data-uis-action="decrease"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #95a5a6;
+}
+
+/* Disable increase button when at maximum size */
+.font-adjuster[data-uis-fontsize="40"] [data-uis-action="increase"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #95a5a6;
+}
+      </code></pre>
+
+      <p>Now, let's add the JavaScript that updates the state when buttons are clicked:</p>
+      <pre><code class="language-javascript">
+// Get references to elements
+const fontAdjuster = document.querySelector('.font-adjuster');
+const decreaseButton = document.querySelector('[data-uis-action="decrease"]');
+const increaseButton = document.querySelector('[data-uis-action="increase"]');
+const sizeDisplay = document.querySelector('.size-display');
+const sampleText = document.querySelector('.sample-text');
+
+// Initialize CSS variable from data attribute
+updateCSSVariable();
+
+// Add event listeners
+decreaseButton.addEventListener('click', () => adjustFontSize(-1));
+increaseButton.addEventListener('click', () => adjustFontSize(1));
+
+// Function to adjust font size
+function adjustFontSize(change) {
+  // Get current font size from data attribute
+  let currentSize = parseInt(fontAdjuster.getAttribute('data-uis-fontsize'));
+  
+  // Calculate new size (with limits)
+  const newSize = Math.max(10, Math.min(40, currentSize + change));
+  
+  // Update the data attribute (source of truth)
+  fontAdjuster.setAttribute('data-uis-fontsize', newSize);
+  
+  // Update CSS variable
+  updateCSSVariable();
+  
+  // Update display text
+  sizeDisplay.textContent = `${newSize}px`;
+}
+
+// Function to update CSS variable from data attribute
+function updateCSSVariable() {
+  const size = fontAdjuster.getAttribute('data-uis-fontsize');
+  document.documentElement.style.setProperty('--font-size', `${size}px`);
+}
+      </code></pre>
+
+      <p>The key insight here is that we're using data attributes as the source of truth for our state, but we're mapping that to CSS variables for styling. This gives us the best of both worlds: semantic data attributes and powerful CSS variable-based styling.</p>
+      
+      <h3>Adding Derived State Based on Numeric Ranges</h3>
+      
+      <p>Now, let's add some derived state based on the font size. We'll create different text size categories and apply different styles based on those categories:</p>
+      
+      <pre><code class="language-css">
+/* Derived state: text size categories */
+.font-adjuster[data-uis-fontsize="10"],
+.font-adjuster[data-uis-fontsize="11"],
+.font-adjuster[data-uis-fontsize="12"],
+.font-adjuster[data-uis-fontsize="13"],
+.font-adjuster[data-uis-fontsize="14"] {
+  --text-size-category: "small";
+}
+
+.font-adjuster[data-uis-fontsize="15"],
+.font-adjuster[data-uis-fontsize="16"],
+.font-adjuster[data-uis-fontsize="17"],
+.font-adjuster[data-uis-fontsize="18"],
+.font-adjuster[data-uis-fontsize="19"],
+.font-adjuster[data-uis-fontsize="20"],
+.font-adjuster[data-uis-fontsize="21"],
+.font-adjuster[data-uis-fontsize="22"],
+.font-adjuster[data-uis-fontsize="23"],
+.font-adjuster[data-uis-fontsize="24"] {
+  --text-size-category: "medium";
+}
+
+.font-adjuster[data-uis-fontsize="25"],
+.font-adjuster[data-uis-fontsize="26"],
+.font-adjuster[data-uis-fontsize="27"],
+.font-adjuster[data-uis-fontsize="28"],
+.font-adjuster[data-uis-fontsize="29"],
+.font-adjuster[data-uis-fontsize="30"],
+.font-adjuster[data-uis-fontsize="31"],
+.font-adjuster[data-uis-fontsize="32"],
+.font-adjuster[data-uis-fontsize="33"],
+.font-adjuster[data-uis-fontsize="34"] {
+  --text-size-category: "large";
+}
+
+.font-adjuster[data-uis-fontsize="35"],
+.font-adjuster[data-uis-fontsize="36"],
+.font-adjuster[data-uis-fontsize="37"],
+.font-adjuster[data-uis-fontsize="38"],
+.font-adjuster[data-uis-fontsize="39"],
+.font-adjuster[data-uis-fontsize="40"] {
+  --text-size-category: "extra-large";
+}
+
+/* Apply styles based on text size category */
+.font-adjuster[style*="--text-size-category: \"small\""] .sample-text {
+  color: #7f8c8d;
+  line-height: 1.4;
+}
+
+.font-adjuster[style*="--text-size-category: \"medium\""] .sample-text {
+  color: #2c3e50;
+  line-height: 1.5;
+}
+
+.font-adjuster[style*="--text-size-category: \"large\""] .sample-text {
+  color: #2980b9;
+  line-height: 1.6;
+}
+
+.font-adjuster[style*="--text-size-category: \"extra-large\""] .sample-text {
+  color: #8e44ad;
+  line-height: 1.7;
+  font-weight: 500;
+}
+      </code></pre>
+      
+      <div class="deep-dive">
+        <h2>Deep Dive: Cascading Derived State (CDS)</h2>
+        
+        <p>Let's examine what's happening in this part of our CSS more closely:</p>
+        
+        <pre><code class="language-css">
+.font-adjuster[data-uis-fontsize="35"],
+.font-adjuster[data-uis-fontsize="36"],
+.font-adjuster[data-uis-fontsize="37"],
+.font-adjuster[data-uis-fontsize="38"],
+.font-adjuster[data-uis-fontsize="39"],
+.font-adjuster[data-uis-fontsize="40"] {
+  --text-size-category: "extra-large";
+}
+
+/* Apply styles based on text size category */
+.font-adjuster[style*="--text-size-category: \"small\""] .sample-text {
+  color: #7f8c8d;
+  line-height: 1.4;
+}
+        </code></pre>
+        
+        <h3>What's Happening Here?</h3>
+        
+        <p>This code demonstrates a multi-layered state derivation system using CSS:</p>
+        
+        <ol>
+          <li>The first part is <strong>categorizing numeric values</strong> into semantic categories. When the <code>data-uis-fontsize</code> attribute equals any value between 35-40, the CSS sets a custom property <code>--text-size-category</code> to "extra-large".</li>
+          
+          <li>The second part is <strong>applying styles based on the derived category</strong>. It uses an attribute selector that looks for the string <code>--text-size-category: "small"</code> within the style attribute, then applies specific styling to the <code>.sample-text</code> element inside.</li>
+        </ol>
+        
+        <p>This creates a fascinating chain of state derivation:</p>
+        <ol>
+          <li>Primary state: The numeric <code>data-uis-fontsize</code> attribute value (e.g., "37")</li>
+          <li>First derived state: The categorical <code>--text-size-category</code> CSS variable (e.g., "extra-large")</li>
+          <li>Second derived state: The styles applied based on the category (color, line-height, etc.)</li>
+        </ol>
+        
+        <h3>Multiple Layers of Derived State</h3>
+        
+        <p>There are multiple layers of derived state working together:</p>
+        
+        <ul>
+          <li><strong>Primary derived state</strong>: The text size category (<code>--text-size-category</code>) derived from numeric ranges</li>
+          <li><strong>Secondary derived states</strong>: The specific styling properties (color, line-height, font-weight) derived from the category</li>
+          <li><strong>Implicit derived state</strong>: The visual appearance resulting from the combination of all applied styles</li>
+        </ul>
+        
+        <p>This creates a cascading derivation system where changes to a single numeric value can trigger multiple layers of derived state changes automatically.</p>
+        
+        <h3>Relationship Between Categories and Properties</h3>
+        
+        <p>The relationship between <code>--text-size-category:"extra-large"</code> and line heights is a <strong>declarative mapping</strong> between semantic categories and visual properties:</p>
+        
+        <pre><code class="language-css">
+.font-adjuster[style*="--text-size-category: \"extra-large\""] .sample-text {
+  color: #8e44ad;
+  line-height: 1.7;
+  font-weight: 500;
+}
+        </code></pre>
+        
+        <p>This creates a <strong>bundled property set</strong> where:</p>
+        <ul>
+          <li>The category "extra-large" maps to a specific line height (1.7)</li>
+          <li>This same category also maps to other properties (purple color, semi-bold weight)</li>
+          <li>All properties change together when the category changes</li>
+        </ul>
+        
+        <p>This approach allows for <strong>coherent style transitions</strong> as the font size changes. Rather than having to individually calculate each property based on the font size, the category system creates natural "breakpoints" where multiple properties change together in a coordinated way.</p>
+        
+        <h3>Introducing: Cascading Derived State (CDS)</h3>
+        
+        <p>What we're seeing here is a novel approach called <strong>Cascading Derived State (CDS)</strong> - a multi-layered derivation system that combines:</p>
+        
+        <ol>
+          <li><strong>Data attributes</strong> for primary state storage</li>
+          <li><strong>CSS variables</strong> for derived categorical state</li>
+          <li><strong>Attribute selectors</strong> targeting the inline style attribute to apply styling based on CSS variables</li>
+        </ol>
+        
+        <p>This creates a powerful paradigm where:</p>
+        
+        <ul>
+          <li>State flows through multiple layers of derivation</li>
+          <li>Each layer builds on the previous one</li>
+          <li>The DOM remains the source of truth</li>
+          <li>CSS handles all the derivation logic</li>
+          <li>JavaScript only updates the primary state</li>
+        </ul>
+        
+        <h3>Implications of Cascading Derived State</h3>
+        
+        <p>This approach has profound implications for web application development:</p>
+        
+        <ul>
+          <li><strong>Reduced JavaScript Complexity</strong> - Complex state derivation happens in CSS, not JavaScript</li>
+          <li><strong>Declarative State Relationships</strong> - State relationships are defined once in CSS, not repeatedly in event handlers</li>
+          <li><strong>Improved Performance</strong> - The browser's native CSS engine handles derivation efficiently</li>
+          <li><strong>Enhanced Maintainability</strong> - State logic is centralized in CSS, making it easier to reason about</li>
+          <li><strong>Natural Breakpoints</strong> - Categories create natural transition points for multiple properties</li>
+          <li><strong>Self-Documenting Code</strong> - Categorical names provide semantic meaning to numeric ranges</li>
+        </ul>
+        
+        <p>The unique innovation here is using CSS attribute selectors that target the style attribute itself, which contains the CSS variables. This creates a powerful self-referential system where CSS can respond to its own variables without JavaScript intervention.</p>
+        
+        <p>This approach aligns perfectly with UIstate's philosophy of using CSS for declarative state management, but takes it further by creating a multi-layered derivation system that no other framework has implemented in quite this way.</p>
+      </div>
+    </div>
+
+    <div class="key-insights">
+      <h2>Key Insights About Numeric State in UIstate</h2>
+      
+      <h3>Numeric State vs. Binary State</h3>
+      <p>This example demonstrates how UIstate can handle numeric state values, not just binary on/off states:</p>
+      <ul>
+        <li>Numeric values can represent a continuous range of states</li>
+        <li>CSS variables can store and apply these numeric values directly</li>
+        <li>Data attributes store the semantic state (the source of truth)</li>
+      </ul>
+      
+      <h3>Derived State from Numeric Ranges</h3>
+      <p>We can create derived state based on numeric ranges:</p>
+      <ul>
+        <li>Group numeric values into semantic categories (small, medium, large)</li>
+        <li>Apply different styles based on these categories</li>
+        <li>The categorization happens automatically as the numeric value changes</li>
+      </ul>
+      
+      <h3>Two-Way State Binding</h3>
+      <p>This example demonstrates two-way state binding:</p>
+      <ul>
+        <li>User interactions update the data attribute state</li>
+        <li>JavaScript maps that state to CSS variables</li>
+        <li>CSS applies styles based on both the direct value and derived categories</li>
+        <li>The UI reflects the current state back to the user (size display)</li>
+      </ul>
+      
+      <h3>Progressive Enhancement</h3>
+      <p>The font adjuster demonstrates progressive enhancement:</p>
+      <ul>
+        <li>Basic functionality works with just HTML and CSS</li>
+        <li>JavaScript adds interactivity and state updates</li>
+        <li>Derived state adds richer styling without additional JavaScript</li>
+      </ul>
+    </div>
+  
+    <div class="section-divider">
+      <h2>Implementation Details</h2>
+      <p>Let's examine the key aspects of this implementation</p>
+    </div>
+
+    <div class="implementation-details">
+      <h3>HTML Structure</h3>
+      <p>The HTML structure is simple and semantic:</p>
+      <ul>
+        <li>A container element holds the state via data attribute</li>
+        <li>Control buttons have action identifiers</li>
+        <li>The sample text is styled based on the state</li>
+      </ul>
+
+      <h3>CSS Implementation</h3>
+      <p>The CSS demonstrates several UIstate patterns:</p>
+      <ul>
+        <li>CSS variables store the numeric state values</li>
+        <li>Attribute selectors target elements based on their state</li>
+        <li>Derived state is created through categorization of numeric ranges</li>
+        <li>Different styles are applied based on both direct values and derived categories</li>
+      </ul>
+
+      <h3>JavaScript</h3>
+      <p>The JavaScript is minimal and focused on state management:</p>
+      <ul>
+        <li>It updates the data attribute (the source of truth)</li>
+        <li>It maps the data attribute value to CSS variables</li>
+        <li>It enforces constraints (min/max values)</li>
+        <li>It updates the display to reflect the current state</li>
+      </ul>
+    </div>
+
+    <div class="next-steps">
+      <h2>Taking It Further</h2>
+      <p>This example demonstrates numeric state and derived state categories. You could extend it by:</p>
+      <ul>
+        <li>Adding more font properties (weight, spacing, etc.)</li>
+        <li>Creating interdependent properties (e.g., line height that adjusts with font size)</li>
+        <li>Adding presets that set multiple properties at once</li>
+        <li>Creating a theme system that changes multiple text properties based on a single state change</li>
+      </ul>
+    </div>
+    
+    <div class="future-vision">
+      <h2>Future Possibilities: The Logical Conclusion of CDS</h2>
+      
+      <p>Taking the Cascading Derived State (CDS) approach to its logical conclusion opens up some fascinating possibilities that would be difficult or impossible in other frameworks. Here are some novel implementations that become possible:</p>
+
+      <h3>1. Self-Adapting Component Systems</h3>
+      <p>Imagine components that automatically adapt their entire behavior based on their context without any JavaScript intervention:</p>
+      <ul>
+        <li>A button that changes not just its appearance but its behavior (debounce timing, click effects) based on its position in a form</li>
+        <li>Navigation elements that adjust their interaction patterns based on screen size, user preferences, and application state</li>
+        <li>Form fields that modify validation rules based on the values of other fields</li>
+      </ul>
+      <p>This goes beyond responsive design to create truly context-aware components where the CSS is making behavioral decisions traditionally handled by JavaScript.</p>
+
+      <h3>2. State-Based Animation Orchestration</h3>
+      <p>CDS could enable complex animation sequences driven entirely by state transitions:</p>
+      <ul>
+        <li>Multi-stage animations where each step triggers the next through cascading state changes</li>
+        <li>Synchronized animations across multiple elements without JavaScript coordination</li>
+        <li>Animation timing and properties that adapt to user interaction patterns</li>
+      </ul>
+      <p>This would allow for animation systems that respond to state in ways that CSS animations and transitions alone cannot achieve, but without the overhead of JavaScript animation libraries.</p>
+
+      <h3>3. Declarative State Machines in CSS</h3>
+      <p>The hierarchical state machine approach could be taken further with CDS:</p>
+      <ul>
+        <li>Full state machines defined entirely in CSS with transitions triggered by attribute changes</li>
+        <li>Complex conditional logic expressed through cascading derived states</li>
+        <li>State history and backtracking implemented through layered CSS variables</li>
+      </ul>
+      <p>This could enable complex application flows to be defined declaratively in CSS rather than imperatively in JavaScript.</p>
+
+      <h3>4. Contextual Theming Beyond Variables</h3>
+      <p>While CSS variables already enable theming, CDS could enable much more sophisticated theming:</p>
+      <ul>
+        <li>Themes that adapt not just colors but spacing, interaction patterns, and behaviors</li>
+        <li>Context-aware components that adjust their appearance based on surrounding content</li>
+        <li>Automatic accessibility adjustments based on user preferences and content</li>
+      </ul>
+      <p>The key difference is that the theme wouldn't just be a set of variables, but a cascading system of derived states that influence each other.</p>
+
+      <h3>5. Reactive Data Visualization</h3>
+      <p>Data visualization typically requires JavaScript, but CDS could enable some fascinating CSS-driven visualizations:</p>
+      <ul>
+        <li>Charts that automatically adjust scales, labels, and legends based on data attributes</li>
+        <li>Visualizations that highlight relationships between data points through derived states</li>
+        <li>Interactive explorations where user interactions reveal new layers of data representation</li>
+      </ul>
+      <p>This would be particularly powerful for dashboards and monitoring UIs where data changes frequently.</p>
+
+      <h3>6. Semantic Markup Enhancement</h3>
+      <p>CDS could bridge the gap between semantic HTML and visual presentation:</p>
+      <ul>
+        <li>Content that visually adapts based on its semantic structure without JavaScript</li>
+        <li>Automatic visual hierarchies derived from document structure</li>
+        <li>Accessibility features that respond to content meaning rather than just visual properties</li>
+      </ul>
+      <p>This would allow for truly semantic markup that still provides rich visual experiences.</p>
+
+      <h3>The New Paradigm</h3>
+      <p>The logical conclusion of CDS is a paradigm where the boundary between "state" and "style" becomes increasingly blurred. Instead of treating CSS as merely a styling layer, it becomes a declarative programming language for defining complex state relationships and behaviors. This fundamentally challenges the traditional separation of concerns in web development, suggesting instead a unified approach where the DOM and CSS together form a complete state management system.</p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 UIstate. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

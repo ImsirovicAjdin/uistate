@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thinking Outside Frameworks - UIstate Concepts</title>
+  <link rel="stylesheet" href="../main.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Thinking Outside Frameworks</h1>
+      <p>Modeling state at a fundamental level with UIstate</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <nav class="breadcrumbs">
+      <a href="../index.html">Home</a> &gt;
+      <a href="../concepts.html">Concepts</a> &gt;
+      <span>Thinking Outside Frameworks</span>
+    </nav>
+
+    <main>
+    <section class="intro">
+      <h2>Introduction</h2>
+      <p>
+        One of the core benefits of UIstate is that it forces developers to think about state
+        in a more fundamental, platform-aligned way, independent of JavaScript framework abstractions.
+        This leads to more robust applications with clearer state models.
+      </p>
+    </section>
+
+    <section>
+      <h2>Framework-Agnostic State Modeling</h2>
+      <p>
+        When building an application using UIstate, you need to model your state "outside" of specific
+        framework paradigms like React's useState or Vue's reactive properties. Instead, you identify:
+      </p>
+
+      <ol>
+        <li><strong>Source of Truth in the DOM</strong> - What core state should live in data attributes</li>
+        <li><strong>Derived States as Extensions</strong> - What derived states might exist based on that core state</li>
+        <li><strong>State Transitions as Attribute Changes</strong> - How state changes should be represented</li>
+      </ol>
+
+      <p>
+        For example, in a todo application, you would model the fundamental state (todo text, completion status,
+        priority, etc.) directly in the DOM through data attributes, rather than abstracting it away in 
+        JavaScript framework constructs.
+      </p>
+    </section>
+
+    <section>
+      <h2>Benefits of Platform-Aligned Thinking</h2>
+      
+      <h3>Mental Clarity</h3>
+      <p>
+        Your state model becomes clearer because you can't hide behind framework abstractions.
+        You must think about what the actual state of your application is.
+      </p>
+      
+      <h3>Longevity</h3>
+      <p>
+        State models built on DOM attributes and CSS selectors will outlive any JavaScript framework.
+        They're built on web standards that have remained stable for far longer than JS frameworks.
+      </p>
+      
+      <h3>Debuggability</h3>
+      <p>
+        The state is directly inspectable in the DOM without special tools. You can use browser devtools
+        to see exactly what state your application is in.
+      </p>
+      
+      <h3>Transferability</h3>
+      <p>
+        The knowledge of how to model state with UIstate transfers to any project, regardless of framework.
+        These skills will serve you across your entire career.
+      </p>
+    </section>
+
+    <section>
+      <h2>Case Study: Todo Application</h2>
+      <p>
+        In a React todo app, you might think "I need a useState for todos" - but with UIstate, you think 
+        "I need a data model that represents todos in the DOM in a way that allows for efficient styling
+        and derivation."
+      </p>
+      
+      <p>
+        In a UIstate todo application, you would:
+      </p>
+      
+      <ul>
+        <li>Model individual todos with data attributes for their properties</li>
+        <li>Use CSS selectors to style todos based on completion, priority, or category</li>
+        <li>Derive additional states (like filtering) through attributes on container elements</li>
+        <li>Handle state transitions by changing attributes rather than managing complex JS state</li>
+      </ul>
+      
+      <p>
+        This shift in thinking is similar to how designing database schemas forces you to think about your
+        data model in a more fundamental way than just throwing things into JavaScript objects.
+      </p>
+    </section>
+
+    <section>
+      <h2>Thread Benefits</h2>
+      <p>
+        By thinking outside of framework paradigms, you also gain access to multi-threading benefits.
+        CSS style calculation and rendering occur on separate threads from JavaScript execution, 
+        allowing for smoother transitions and animations even when JavaScript is busy.
+      </p>
+      
+      <p>
+        This platform-aligned thinking ultimately leads to applications that perform better and are more
+        maintainable over time.
+      </p>
+    </section>
+    </main>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 UIstate - A declarative state management approach for the web</p>
+    </div>
+  </footer>
+</body>
+</html>

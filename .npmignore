@@ -1,0 +1,38 @@
+# Development files
+node_modules/
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Documentation
+/docs/
+
+# Examples
+/examples/
+
+# Scripts and development tools
+/scripts/
+
+# Testing
+/tests/
+*.test.js
+*.spec.js
+/coverage/
+
+# Build tools
+lerna.json
+.eslintrc.js
+.prettierrc
+.babelrc
+.editorconfig
+
+# Other packages in monorepo (only core package should be published)
+/packages/hsm/
+/packages/observer/
+/packages/performance/
+
+# Misc
+*.log
+.DS_Store
+Thumbs.db

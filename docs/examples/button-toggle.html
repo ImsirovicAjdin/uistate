@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Button Toggle - UIstate Documentation</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>UIstate Documentation</h1>
+      <nav>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../getting-started.html">Getting Started</a></li>
+          <li><a href="../examples/index.html" class="active">Examples</a></li>
+          <li><a href="../api.html">API</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Button Toggle Example</h1>
+
+  <div class="example-walkthrough">
+    <p>Consider the following example. I navigate to codingexercises.com website, and I inspect the first card on the screen. I find that it has a CSS class of <code>article-preview</code> and that it sits wrapped by a few elements, one of which has the CSS class of <code>intro-section</code>.</p>
+
+    <p>Let's capture that in the browser console:</p>
+    <pre><code class="language-javascript">let firstCard = document.querySelector('.intro-section .article-preview');</code></pre>
+    
+    <p>Easy.</p>
+
+    <p>Next, let's inject a data attribute to it. You'll see why we're doing this later.</p>
+    <pre><code class="language-javascript">firstCard.setAttribute('data-uistate-card-active', 'on')</code></pre>
+
+    <p>Typing <code>firstCard</code> into the console would indeed prove to us we've done it successfully, now our <code>&lt;section class="article-preview"&gt;</code> has a new data attribute: <code>data-uistate-card-active="on"</code>.</p>
+
+    <p>So what can we do with it?</p>
+
+    <p>Well, we can target it with CSS styling. So let's go to the style panel in the devtools, and add these entries:</p>
+    <pre><code class="language-css">[data-uistate-card-active="on"] {
+  opacity: 1;
+  background: lightgray;
+}
+[data-uistate-card-active="off"] {
+  opacity: 0.5;
+  background: white;
+}</code></pre>
+
+    <p>Great. Now that we've prepped it all, let's make our card react to mouse clicks:</p>
+    <pre><code class="language-javascript">firstCard.addEventListener('click', () => {
+  let state = firstCard.getAttribute('data-uistate-card-active');
+  state === 'on' ? 
+      firstCard.setAttribute('data-uistate-card-active', 'off') : 
+      firstCard.setAttribute('data-uistate-card-active', 'on')
+})</code></pre>
+
+    <p>Now, when clicked, the card is going to toggle its <code>active</code> state as either <code>on</code> or <code>off</code>.</p>
+  </div>
+
+  <div class="paradigm-shift">
+    <h3>The Paradigm Shift</h3>
+    <p>What you've just seen represents a fundamental shift in how we manage state:</p>
+    <ul>
+      <li><strong>DOM as Source of Truth</strong> - Instead of keeping state in JavaScript objects, the DOM itself holds the state</li>
+      <li><strong>Declarative vs Imperative</strong> - CSS automatically responds to state changes; no direct style manipulation needed</li>
+      <li><strong>No Virtual DOM</strong> - Bypasses complex reconciliation algorithms for near O(1) performance regardless of app size</li>
+      <li><strong>Developer Experience</strong> - State is visible in the DOM inspector, making debugging dramatically easier</li>
+    </ul>
+    <p>Traditional frameworks fight against the browser with complex state management and reconciliation. UIstate works <em>with</em> the browser's native capabilities for a simpler, more performant approach.</p>
+  </div>
+  
+  <div class="section-divider">
+    <h2>Button Toggle Example Implementation</h2>
+    <p>Now let's see how these principles are applied in a practical example</p>
+  </div>
+
+  <p>This documentation explains the Button Toggle example, which demonstrates the core concept of UIstate: <strong>Attribute-Driven State Inheritance (ADSI)</strong>.</p>
+  
+  <p><a href="../../examples/basic/button-toggle/index.html">View the live example</a></p>
+  
+  <div class="concept">
+    <h2>Core Concept: Attribute-Driven State Inheritance (ADSI)</h2>
+    <p>ADSI is a revolutionary approach to state management where:</p>
+    <ul>
+      <li>The DOM itself becomes the source of truth for state through data attributes</li>
+      <li>CSS automatically responds to state changes via attribute selectors</li>
+      <li>JavaScript only needs to update attributes, not directly manipulate styles</li>
+      <li>State is visible and debuggable directly in the DOM inspector</li>
+    </ul>
+  </div>
+  
+  <h2>Live Example</h2>
+  
+  <div class="example-container">
+    <button class="button-toggle" data-state="inactive">
+      <span class="button-toggle-text">Turn On</span>
+    </button>
+    
+    <script>
+      // Simple toggle handler - no framework dependencies
+      document.querySelector('.button-toggle').addEventListener('click', function() {
+        // Get current state from the DOM
+        const currentState = this.getAttribute('data-state');
+        
+        // Toggle the state
+        const newState = currentState === 'active' ? 'inactive' : 'active';
+        
+        // Update the DOM - this is the only state change needed!
+        this.setAttribute('data-state', newState);
+        
+        // Update text content based on state
+        const textElement = this.querySelector('.button-toggle-text');
+        textElement.textContent = newState === 'active' ? 'Turn Off' : 'Turn On';
+      });
+    </script>
+  </div>
+  
+  <h2>Code Breakdown</h2>
+  
+  <div class="code-block">
+    <div class="code-label">HTML</div>
+    <pre><code>&lt;!-- Button with initial inactive state -->
+&lt;button class="button-toggle" data-state="inactive">
+  &lt;span class="button-toggle-text">Turn On&lt;/span>
+&lt;/button></code></pre>
+    <p>The HTML defines a button with an initial state of "inactive" using the <code>data-state</code> attribute. This attribute is the source of truth for the component's state.</p>
+  </div>
+  
+  <div class="code-block">
+    <div class="code-label">CSS (styles.css - General Styling)</div>
+    <pre><code>/* Base button styles - general appearance regardless of state */
+.button-toggle {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  outline: none;
+  margin: 20px 0;
+}
+
+/* Hover effects - not state-dependent */
+.button-toggle:hover {
+  opacity: 0.9;
+}
+
+/* Focus styles for accessibility - not state-dependent */
+.button-toggle:focus {
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.4);
+}</code></pre>
+
+    <div class="code-label">CSS (state.css - State-Driven Styling)</div>
+    <pre><code>.button-toggle[data-state="inactive"] {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.button-toggle[data-state="active"] {
+  background-color: #4CAF50;
+  color: white;
+}</code></pre>
+    
+    <p>Notice the clear separation between general styling and state-driven styling. This is a key aspect of the UIstate approach:</p>
+    
+    <ul>
+      <li><strong>styles.css</strong> contains general appearance styles that don't depend on state</li>
+      <li><strong>state.css</strong> contains <em>only</em> the attribute selectors that respond to state changes</li>
+    </ul>
+    
+    <p>The CSS attribute selectors (<code>[data-state="inactive"]</code> and <code>[data-state="active"]</code>) are the heart of UIstate's ADSI approach. They automatically apply different styles based on the element's state attribute without requiring any JavaScript to manipulate styles directly.</p>
+    
+    <p>When JavaScript changes the <code>data-state</code> attribute, the browser's CSS engine automatically applies the appropriate styles - creating a clean separation between state management and visual presentation.</p>
+  </div>
+  
+  <div class="code-block">
+    <div class="code-label">JavaScript</div>
+    <pre><code>// Simple toggle handler - no framework dependencies
+document.querySelector('.button-toggle').addEventListener('click', function() {
+  // Get current state from the DOM
+  const currentState = this.getAttribute('data-state');
+  
+  // Toggle the state
+  const newState = currentState === 'active' ? 'inactive' : 'active';
+  
+  // Update the DOM - this is the only state change needed!
+  this.setAttribute('data-state', newState);
+  
+  // Update text content based on state
+  const textElement = this.querySelector('.button-toggle-text');
+  textElement.textContent = newState === 'active' ? 'Turn Off' : 'Turn On';
+});</code></pre>
+    <p>The JavaScript only needs to:</p>
+    <ol>
+      <li>Read the current state from the DOM</li>
+      <li>Determine the new state</li>
+      <li>Update the DOM attribute</li>
+      <li>Update the text content</li>
+    </ol>
+    <p>Notice that it doesn't need to manipulate styles directly - CSS handles that automatically.</p>
+  </div>
+  
+  <h2>Why This Approach Is Revolutionary</h2>
+  
+  <div class="comparison">
+    <div class="comparison-column">
+      <div class="comparison-header">Traditional Frameworks</div>
+      <ul>
+        <li>Keep state in JavaScript objects</li>
+        <li>Use virtual DOM to reconcile changes</li>
+        <li>Require complex diffing algorithms</li>
+        <li>State is hidden in JavaScript closures</li>
+        <li>Styling is often coupled with state changes</li>
+        <li>Performance degrades with application size</li>
+      </ul>
+    </div>
+    <div class="comparison-column">
+      <div class="comparison-header">UIstate Approach</div>
+      <ul>
+        <li>DOM is the source of truth for state</li>
+        <li>No virtual DOM or reconciliation needed</li>
+        <li>Uses browser's native CSS engine</li>
+        <li>State is visible in DOM inspector</li>
+        <li>Clean separation of state and styling</li>
+        <li>Near O(1) performance regardless of size</li>
+      </ul>
+    </div>
+  </div>
+  
+  <h2>Benefits</h2>
+  
+  <ul>
+    <li><strong>Simplicity</strong> - Fewer lines of code, easier to understand</li>
+    <li><strong>Performance</strong> - Leverages browser's optimized CSS engine</li>
+    <li><strong>Debuggability</strong> - State is visible in DOM inspector</li>
+    <li><strong>Maintainability</strong> - Clear separation of concerns</li>
+    <li><strong>Framework Agnostic</strong> - Works with any framework or vanilla JS</li>
+  </ul>
+
+  <h2>What Makes This Remarkable</h2>
+  <p>What's remarkable about this code is what's <em>not</em> there:</p>
+  
+  <ul>
+    <li>No state objects or complex state management</li>
+    <li>No direct style manipulation</li>
+    <li>No virtual DOM or reconciliation</li>
+    <li>No framework dependencies</li>
+  </ul>
+
+  <h2>Advanced Usage</h2>
+  
+  <p>This simple example demonstrates the core concept, but UIstate can be extended to handle:</p>
+  
+  <ul>
+    <li>Complex component hierarchies with state inheritance</li>
+    <li>Hierarchical state machines for application behavior</li>
+    <li>Namespaced variables for complex data structures</li>
+    <li>Cross-frame synchronization without complex messaging</li>
+  </ul>
+  
+  <p>Check out our other examples to see these concepts in action.</p>
+  
+  <h2>Further Reading</h2>
+  
+  <ul>
+    <li><a href="../core-concepts/adsi.html">Attribute-Driven State Inheritance (ADSI)</a></li>
+    <li><a href="../core-concepts/hsm.html">Hierarchical State Machines in UIstate</a></li>
+    <li><a href="../core-concepts/namespaced-variables.html">Namespaced Variables for Complex Data</a></li>
+    <li><a href="../performance/index.html">Performance Advantages of UIstate</a></li>
+  </ul>
+  
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 UIstate. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

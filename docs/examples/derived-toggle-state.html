@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UIstate - Derived Toggle State Example</title>
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>UIstate Documentation</h1>
+      <nav>
+        <ul>
+          <li><a href="../index.html">Home</a></li>
+          <li><a href="../getting-started.html">Getting Started</a></li>
+          <li><a href="../examples/index.html" class="active">Examples</a></li>
+          <li><a href="../api.html">API</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1>Derived Toggle State Example</h1>
+    
+    <p>This documentation explains the Derived Toggle State example, which demonstrates how to create derived state using CSS variables and data attributes in UIstate. This example builds directly on the <a href="two-button-toggle.html">Two Button Toggle</a> example, so make sure you've completed that one first.</p>
+    
+    <p><a href="../../examples/basic/derived-toggle-state/index.html">View the live example</a></p>
+    
+    <div class="concept">
+      <h2>Core Concept: Derived State with CSS Variables</h2>
+      <p>Building on the foundation of Attribute-Driven State Inheritance (ADSI), this example shows how to:</p>
+      <ul>
+        <li>Use CSS variables to create derived state that automatically updates</li>
+        <li>Combine multiple independent state values into calculated properties</li>
+        <li>Create a reactive UI that responds to derived state without additional JavaScript</li>
+      </ul>
+    </div>
+
+    <div class="example-walkthrough">
+      <h2>Interactive Walkthrough</h2>
+      <p>This example builds directly on the <a href="two-button-toggle.html">Two Button Toggle</a> example. If you haven't completed that example yet, please do so first.</p>
+      
+      <p>Let's continue where we left off with the two-button-toggle example. You should have two working toggle buttons on the example.com page that change color independently when clicked.</p>
+
+      <p>Now, let's add a status indicator that will display a derived state based on both buttons:</p>
+      <pre><code class="language-javascript">
+// Create a status indicator
+let status = document.createElement('div');
+status.setAttribute('id', 'status-indicator');
+status.textContent = 'All features disabled';
+status.style.marginTop = '20px';
+status.style.fontWeight = 'bold';
+status.style.padding = '10px';
+status.style.borderRadius = '4px';
+status.style.backgroundColor = '#f0f0f0';
+ctr.appendChild(status);
+      </code></pre>
+
+      <p>Now let's add CSS variables to track the numeric state of our buttons. Copy and paste this complete CSS into the style tag:</p>
+      <pre><code class="language-css">
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin: 10px;
+  transition: all 0.3s ease;
+}
+
+button[data-uis-state="inactive"] {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+button[data-uis-state="active"] {
+  background-color: #4CAF50;
+  color: white;
+}
+
+button[data-uis-id="button1"][data-uis-state="active"] {
+  background-color: #2196F3; /* Blue */
+}
+
+button[data-uis-id="button2"][data-uis-state="active"] {
+  background-color: #FF9800; /* Orange */
+}
+
+/* Add CSS variables to track numeric state */
+:root {
+  --button1-active: 0;
+  --button2-active: 0;
+  
+  /* Derived state: are all features active? */
+  --all-features-active: calc(
+    (var(--button1-active) + var(--button2-active)) == 2 ? 1 : 0
+  );
+  
+  /* Derived state: are any features active? */
+  --any-feature-active: calc(
+    (var(--button1-active) + var(--button2-active)) > 0 ? 1 : 0
+  );
+}
+
+/* Style the status indicator based on derived state */
+#status-indicator {
+  background-color: var(--any-feature-active) * 1 ? #e0f7fa : #f0f0f0;
+  color: var(--all-features-active) * 1 ? #00796b : #333;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 20px;
+  font-weight: bold;
+}
+      </code></pre>
+
+      <p>Now, copy and paste this complete JavaScript into the console to make everything work:</p>
+      <pre><code class="language-javascript">
+// Create a status indicator if it doesn't exist
+if (!document.getElementById('status-indicator')) {
+  let status = document.createElement('div');
+  status.setAttribute('id', 'status-indicator');
+  status.textContent = 'All features disabled';
+  document.querySelector('div').appendChild(status);
+}
+
+// Update the existing click handlers to track numeric state
+document.querySelectorAll('button').forEach(button => {
+  // Remove any existing click listeners to avoid duplicates
+  const newButton = button.cloneNode(true);
+  button.parentNode.replaceChild(newButton, button);
+  
+  newButton.addEventListener('click', function() {
+    // Get the current state from the DOM
+    const currentState = this.getAttribute('data-uis-state');
+    
+    // Toggle the state
+    const newState = currentState === 'active' ? 'inactive' : 'active';
+    
+    // Update the DOM attribute
+    this.setAttribute('data-uis-state', newState);
+    
+    // Update text content based on state
+    this.textContent = newState === 'active' ? 'Turn Off' : 'Turn On';
+    
+    // Update CSS variable for numeric state tracking
+    const buttonId = this.getAttribute('data-uis-id');
+    const numericState = newState === 'active' ? '1' : '0';
+    document.documentElement.style.setProperty(`--${buttonId}-active`, numericState);
+    
+    // Update status indicator based on derived state
+    updateStatusIndicator();
+  });
+});
+
+// Function to update the status indicator text based on button states
+function updateStatusIndicator() {
+  const button1Active = document.querySelector('[data-uis-id="button1"]').getAttribute('data-uis-state') === 'active';
+  const button2Active = document.querySelector('[data-uis-id="button2"]').getAttribute('data-uis-state') === 'active';
+  
+  const status = document.getElementById('status-indicator');
+  
+  if (button1Active && button2Active) {
+    status.textContent = 'All features enabled!';
+  } else if (button1Active || button2Active) {
+    status.textContent = 'Some features enabled';
+  } else {
+    status.textContent = 'All features disabled';
+  }
+}
+
+// Initialize status
+updateStatusIndicator();
+      </code></pre>
+
+      <p>Now let's test our derived state implementation:</p>
+      <ol>
+        <li>Click on the first button - notice how the status indicator changes to "Some features enabled" and its background color changes</li>
+        <li>Click on the second button - now the status indicator should show "All features enabled!" and change color again</li>
+        <li>Click on either button to turn it off - the status indicator updates automatically</li>
+      </ol>
+      
+      <p>This demonstrates the power of derived state in UIstate:</p>
+      <ul>
+        <li>Each button maintains its own independent state via data attributes</li>
+        <li>CSS variables track the numeric representation of those states</li>
+        <li>Derived state is calculated automatically from those numeric values</li>
+        <li>The UI responds to derived state changes without additional JavaScript</li>
+      </ul>
+
+      <p>The key insight here is that we've created a system where:</p>
+      <pre><code class="language-css">
+/* CSS does the heavy lifting of calculating derived state */
+:root {
+  /* Individual states tracked numerically */
+  --button1-active: 0;  /* Updated by JavaScript when button1 is clicked */
+  --button2-active: 0;  /* Updated by JavaScript when button2 is clicked */
+  
+  /* Derived states calculated automatically */
+  --all-features-active: calc(
+    (var(--button1-active) + var(--button2-active)) = 2 ? 1 : 0
+  );
+  --any-feature-active: calc(
+    (var(--button1-active) + var(--button2-active)) > 0 ? 1 : 0
+  );
+}
+
+/* UI automatically responds to derived state */
+#status-indicator {
+  background-color: var(--any-feature-active, 0) * 1 ? #e0f7fa : #f0f0f0;
+  color: var(--all-features-active, 0) * 1 ? #00796b : #333;
+}
+      </code></pre>
+
+      <p>Try clicking the buttons! You'll see that:</p>
+      <ul>
+        <li>Each button toggles between on and off states</li>
+        <li>The indicator shows whether all features are enabled</li>
+        <li>The indicator color changes based on the derived state</li>
+      </ul>
+
+      <p>The key insight here is that the derived state (<code>--uis-all-features-enabled</code>) is calculated automatically by CSS. The calculation happens instantly whenever the individual feature states change, with no additional JavaScript needed to keep the derived value in sync.</p>
+    </div>
+
+    <div class="paradigm-shift">
+      <h3>Key Insights About UIstate's Derived State</h3>
+      
+      <h4>CSS as the Computation Engine</h4>
+      <ul>
+        <li>CSS calc() is doing all the heavy lifting for derived state calculations</li>
+        <li>The browser's highly optimized CSS engine handles these calculations efficiently</li>
+        <li>This leverages existing browser capabilities rather than requiring custom JavaScript frameworks</li>
+      </ul>
+      
+      <h4>Two-Layer State System</h4>
+      <ul>
+        <li>Data attributes (<code>data-uis-state</code>) provide a semantic, human-readable state representation</li>
+        <li>CSS variables (<code>--button1-active</code>) provide a numeric representation for calculations</li>
+        <li>This dual approach gives you both semantic clarity and computational power</li>
+      </ul>
+      
+      <h4>Declarative State Relationships</h4>
+      <ul>
+        <li>The relationship between states is declared once in CSS, not repeatedly in event handlers</li>
+        <li>This follows UIstate's philosophy of declarative rather than imperative state management</li>
+        <li>Changes to individual states automatically propagate through the derived calculations</li>
+      </ul>
+      
+      <h4>Performance Characteristics</h4>
+      <ul>
+        <li>CSS variable calculations are highly optimized by browsers</li>
+        <li>Only the DOM nodes that need updating are affected (unlike some virtual DOM approaches)</li>
+        <li>This aligns with leveraging the browser's CSS engine for performance</li>
+      </ul>
+      
+      <h4>Separation of Concerns</h4>
+      <ul>
+        <li>State storage (data attributes and CSS variables)</li>
+        <li>State relationships (CSS calc expressions)</li>
+        <li>Visual representation (CSS selectors and rules)</li>
+        <li>Interaction handling (minimal JavaScript)</li>
+      </ul>
+      
+      <h4>Limitations to Consider</h4>
+      <ul>
+        <li>CSS calc() has more limited expression capabilities than JavaScript</li>
+        <li>Complex conditional logic can be challenging to express</li>
+        <li>Debugging derived state calculations can be more difficult than JavaScript</li>
+      </ul>
+    </div>
+  
+    <div class="section-divider">
+      <h2>Example Implementation</h2>
+      <p>Now let's look at how these principles are applied in our actual example</p>
+    </div>
+
+    <div class="implementation-details">
+      <h3>HTML Structure</h3>
+      <p>The example consists of three toggle buttons and two status indicators:</p>
+      <pre><code class="language-html">
+&lt;button class="feature-toggle" data-uis-feature="a" data-uis-state="off"&gt;
+    Feature A
+&lt;/button&gt;
+
+&lt;!-- Status indicator that changes based on all features being enabled --&gt;
+&lt;div class="system-status"&gt;
+    &lt;div class="status-indicator"&gt;&lt;/div&gt;
+    &lt;p class="status-text"&gt;System Status&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- Progress indicator that shows how many features are enabled --&gt;
+&lt;div class="progress-indicator"&gt;
+    &lt;div class="progress-bar"&gt;&lt;/div&gt;
+    &lt;p class="progress-text"&gt;Enabled Features&lt;/p&gt;
+&lt;/div&gt;
+      </code></pre>
+
+      <h3>CSS for Derived State</h3>
+      <p>The CSS defines both individual toggle states and derived states:</p>
+      <pre><code class="language-css">
+:root {
+    /* Numeric state tracking (1 for on, 0 for off) */
+    --uis-feature-a-active: 0;
+    --uis-feature-b-active: 0;
+    --uis-feature-c-active: 0;
+    
+    /* Derived state: are all features enabled? */
+    --uis-all-features-enabled: calc(
+        var(--uis-feature-a-active) * var(--uis-feature-b-active) * var(--uis-feature-c-active)
+    );
+    
+    /* Derived state: how many features are enabled? */
+    --uis-enabled-feature-count: calc(
+        var(--uis-feature-a-active) + var(--uis-feature-b-active) + var(--uis-feature-c-active)
+    );
+    
+    /* Derived state: progress percentage */
+    --uis-progress-percentage: calc(var(--uis-enabled-feature-count) * 33.33%);
+}
+
+/* Visual elements respond to derived state */
+.status-indicator {
+    background-color: hsl(calc(120 * var(--uis-all-features-enabled)), 70%, 45%);
+}
+
+.progress-bar {
+    width: var(--uis-progress-percentage);
+    background-color: hsl(calc(120 * var(--uis-enabled-feature-count) / 3), 70%, 45%);
+}
+      </code></pre>
+
+      <h3>JavaScript</h3>
+      <p>The JavaScript is minimal, only handling the toggle interaction and updating CSS variables:</p>
+      <pre><code class="language-javascript">
+// Add event listeners to toggle buttons
+document.querySelectorAll('.feature-toggle').forEach(button => {
+    button.addEventListener('click', function() {
+        const feature = this.getAttribute('data-uis-feature');
+        const currentState = this.getAttribute('data-uis-state');
+        const newState = currentState === 'on' ? 'off' : 'on';
+        const numericState = newState === 'on' ? '1' : '0';
+        
+        // Update data attribute (ADSI approach)
+        this.setAttribute('data-uis-state', newState);
+        
+        // Update CSS variable (for derived state)
+        document.documentElement.style.setProperty(`--uis-feature-${feature}-active`, numericState);
+        
+        // Update text content that can't be handled by CSS alone
+        updateDerivedState();
+    });
+});
+      </code></pre>
+    </div>
+
+    <div class="next-steps">
+      <h2>Taking It Further</h2>
+      <p>This example demonstrates the foundation of derived state in UIstate. Here are some ways to extend this concept:</p>
+      <ul>
+        <li><strong>Hierarchical State Machines</strong> - Use CSS variables to represent complex state machines with parent-child relationships</li>
+        <li><strong>Namespaced Variables</strong> - Organize state into logical groups using CSS variable naming conventions</li>
+        <li><strong>Conditional Rendering</strong> - Use derived state to control the visibility and appearance of UI components</li>
+        <li><strong>Animation Triggers</strong> - Drive animations based on state transitions using CSS variables</li>
+      </ul>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 UIstate. All rights reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

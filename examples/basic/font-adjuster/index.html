@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Font Adjuster - UIstate Example</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="state.css">
+</head>
+<body>
+  <h1>Font Adjuster Example</h1>
+  <p><a href="../../../docs/examples/font-adjuster.html">Docs</a></p>
+  
+  <div class="font-adjuster" data-uis-fontsize="26">
+    <div class="controls">
+      <button class="control-button" data-uis-action="decrease">-</button>
+      <span class="size-display">26px</span>
+      <button class="control-button" data-uis-action="increase">+</button>
+    </div>
+    
+    <p class="sample-text">This is a sample text that demonstrates font size changes.</p>
+  </div>
+
+  <script>
+    // Get references to elements
+    const fontAdjuster = document.querySelector('.font-adjuster');
+    const decreaseButton = document.querySelector('[data-uis-action="decrease"]');
+    const increaseButton = document.querySelector('[data-uis-action="increase"]');
+    const sizeDisplay = document.querySelector('.size-display');
+    const sampleText = document.querySelector('.sample-text');
+    
+    // Initialize CSS variable from data attribute
+    updateCSSVariable();
+    
+    // Add event listeners
+    decreaseButton.addEventListener('click', () => adjustFontSize(-1));
+    increaseButton.addEventListener('click', () => adjustFontSize(1));
+    
+    // Function to adjust font size
+    function adjustFontSize(change) {
+      // Get current font size from data attribute
+      let currentSize = parseInt(fontAdjuster.getAttribute('data-uis-fontsize'));
+      
+      // Calculate new size (with limits)
+      const newSize = Math.max(10, Math.min(40, currentSize + change));
+      
+      // Update the data attribute (source of truth)
+      fontAdjuster.setAttribute('data-uis-fontsize', newSize);
+      
+      // Update CSS variable
+      updateCSSVariable();
+      
+      // Update display text
+      sizeDisplay.textContent = `${newSize}px`;
+    }
+    
+    // Function to update CSS variable from data attribute
+    function updateCSSVariable() {
+      const size = fontAdjuster.getAttribute('data-uis-fontsize');
+      document.documentElement.style.setProperty('--font-size', `${size}px`);
+    }
+  </script>
+</body>
+</html>

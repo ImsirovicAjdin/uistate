@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attribute-Derived Range Slider - UIstate Example</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="state.css">
+</head>
+<body>
+  <h1>Attribute-Derived Range Slider Example</h1>
+  <p><a href="../../../docs/examples/attribute-derived-range-slider.html">Docs</a></p>
+  
+  <div class="range-slider-container" data-uis-value="50" data-uis-min="0" data-uis-max="100" data-uis-intensity="medium">
+    <label class="range-label">Volume: <span class="value-display">50</span></label>
+    <div class="range-track">
+      <div class="range-fill"></div>
+      <div class="range-thumb"></div>
+    </div>
+  </div>
+
+  <script>
+    // Get references to elements
+    const container = document.querySelector('.range-slider-container');
+    const valueDisplay = document.querySelector('.value-display');
+    const thumb = document.querySelector('.range-thumb');
+    const track = document.querySelector('.range-track');
+    const fill = document.querySelector('.range-fill');
+    
+    // Initialize from data attributes
+    updateSliderPosition();
+    
+    // Add event listeners for mouse/touch interactions
+    thumb.addEventListener('mousedown', startDrag);
+    track.addEventListener('click', jumpToPosition);
+    
+    // Function to start dragging the thumb
+    function startDrag(e) {
+      e.preventDefault();
+      
+      // Add event listeners for drag and release
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('mouseup', stopDrag);
+      
+      // Store initial position for drag calculation
+      const initialX = e.clientX;
+      const initialValue = parseInt(container.getAttribute('data-uis-value'));
+      
+      // Drag function
+      function drag(e) {
+        const trackRect = track.getBoundingClientRect();
+        const min = parseInt(container.getAttribute('data-uis-min'));
+        const max = parseInt(container.getAttribute('data-uis-max'));
+        const trackWidth = trackRect.width;
+        
+        // Calculate new position based on drag distance
+        const dragDistance = e.clientX - initialX;
+        const dragRatio = dragDistance / trackWidth;
+        const valueRange = max - min;
+        const valueDelta = dragRatio * valueRange;
+        
+        // Calculate new value and constrain to min/max
+        let newValue = Math.round(initialValue + valueDelta);
+        newValue = Math.max(min, Math.min(max, newValue));
+        
+        // Update the data attribute (source of truth)
+        container.setAttribute('data-uis-value', newValue);
+        
+        // Update the UI
+        updateSliderPosition();
+        updateIntensityCategory(newValue);
+      }
+      
+      // Stop drag function
+      function stopDrag() {
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('mouseup', stopDrag);
+      }
+    }
+    
+    // Function to jump to clicked position
+    function jumpToPosition(e) {
+      const trackRect = track.getBoundingClientRect();
+      const min = parseInt(container.getAttribute('data-uis-min'));
+      const max = parseInt(container.getAttribute('data-uis-max'));
+      const trackWidth = trackRect.width;
+      
+      // Calculate click position relative to track
+      const clickX = e.clientX - trackRect.left;
+      const clickRatio = clickX / trackWidth;
+      
+      // Calculate new value and constrain to min/max
+      let newValue = Math.round(min + clickRatio * (max - min));
+      newValue = Math.max(min, Math.min(max, newValue));
+      
+      // Update the data attribute (source of truth)
+      container.setAttribute('data-uis-value', newValue);
+      
+      // Update the UI
+      updateSliderPosition();
+      updateIntensityCategory(newValue);
+    }
+    
+    // Function to update slider position based on data attribute
+    function updateSliderPosition() {
+      const value = parseInt(container.getAttribute('data-uis-value'));
+      const min = parseInt(container.getAttribute('data-uis-min'));
+      const max = parseInt(container.getAttribute('data-uis-max'));
+      
+      // Calculate position percentage
+      const percentage = ((value - min) / (max - min)) * 100;
+      
+      // Update CSS variable
+      document.documentElement.style.setProperty('--slider-position', `${percentage}%`);
+      
+      // Update value display
+      valueDisplay.textContent = value;
+    }
+    
+    // Function to update intensity category based on value
+    function updateIntensityCategory(value) {
+      let category = '';
+      
+      // Determine the appropriate intensity category
+      if (value <= 10) {
+        category = 'muted';
+      } else if (value <= 30) {
+        category = 'low';
+      } else if (value <= 70) {
+        category = 'medium';
+      } else if (value <= 85) {
+        category = 'high';
+      } else {
+        category = 'maximum';
+      }
+      
+      // Update the data attribute (derived state)
+      container.setAttribute('data-uis-intensity', category);
+    }
+  </script>
+</body>
+</html>

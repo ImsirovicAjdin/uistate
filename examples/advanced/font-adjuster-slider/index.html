@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Font Adjuster with Slider - UIstate Example</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="state.css">
+</head>
+<body>
+  <h1>Font Adjuster with Slider</h1>
+  <p><a href="../../../docs/examples/font-adjuster-slider.html">Docs</a></p>
+  
+  <div class="font-adjuster-container" data-uis-fontsize="16">
+    <div class="controls">
+      <h2>Font Size Controls</h2>
+      
+      <!-- Range Slider Control -->
+      <div class="range-slider-container" data-uis-min="8" data-uis-max="32" data-uis-value="16">
+        <label class="range-label">Font Size: <span class="value-display">16</span>px</label>
+        <div class="range-track">
+          <div class="range-fill"></div>
+          <div class="range-thumb"></div>
+        </div>
+      </div>
+      
+      <!-- Status Indicator -->
+      <div class="status-indicator">
+        <p>Current Size: <span class="status-text">Medium</span></p>
+      </div>
+    </div>
+    
+    <div class="content-preview">
+      <h2>Preview</h2>
+      <div class="sample-text">
+        <p>This text will change size as you adjust the slider. The current font size is controlled by the slider value.</p>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, nisl nisl aliquam nisl, eget ultricies nisl nisl eget nisl.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Get references to elements
+    const container = document.querySelector('.font-adjuster-container');
+    const sliderContainer = document.querySelector('.range-slider-container');
+    const valueDisplay = document.querySelector('.value-display');
+    const statusText = document.querySelector('.status-text');
+    const sampleText = document.querySelector('.sample-text');
+    const thumb = document.querySelector('.range-thumb');
+    const track = document.querySelector('.range-track');
+    
+    // Initialize from data attributes
+    updateSliderPosition();
+    updateFontSize();
+    updateStatusIndicator();
+    
+    // Add event listeners for mouse/touch interactions
+    thumb.addEventListener('mousedown', startDrag);
+    track.addEventListener('click', jumpToPosition);
+    
+    // Function to start dragging the thumb
+    function startDrag(e) {
+      e.preventDefault();
+      
+      // Add event listeners for drag and release
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('mouseup', stopDrag);
+      
+      // Store initial position for drag calculation
+      const initialX = e.clientX;
+      const initialValue = parseInt(sliderContainer.getAttribute('data-uis-value'));
+      
+      // Drag function
+      function drag(e) {
+        const trackRect = track.getBoundingClientRect();
+        const min = parseInt(sliderContainer.getAttribute('data-uis-min'));
+        const max = parseInt(sliderContainer.getAttribute('data-uis-max'));
+        const trackWidth = trackRect.width;
+        
+        // Calculate new position based on drag distance
+        const dragDistance = e.clientX - initialX;
+        const dragRatio = dragDistance / trackWidth;
+        const valueRange = max - min;
+        const valueDelta = dragRatio * valueRange;
+        
+        // Calculate new value and constrain to min/max
+        let newValue = Math.round(initialValue + valueDelta);
+        newValue = Math.max(min, Math.min(max, newValue));
+        
+        // Update the data attributes (source of truth)
+        sliderContainer.setAttribute('data-uis-value', newValue);
+        container.setAttribute('data-uis-fontsize', newValue);
+        
+        // Update the UI
+        updateSliderPosition();
+        updateFontSize();
+        updateStatusIndicator();
+      }
+      
+      // Stop drag function
+      function stopDrag() {
+        document.removeEventListener('mousemove', drag);
+        document.removeEventListener('mouseup', stopDrag);
+      }
+    }
+    
+    // Function to jump to clicked position
+    function jumpToPosition(e) {
+      const trackRect = track.getBoundingClientRect();
+      const min = parseInt(sliderContainer.getAttribute('data-uis-min'));
+      const max = parseInt(sliderContainer.getAttribute('data-uis-max'));
+      const trackWidth = trackRect.width;
+      
+      // Calculate click position relative to track
+      const clickX = e.clientX - trackRect.left;
+      const clickRatio = clickX / trackWidth;
+      
+      // Calculate new value and constrain to min/max
+      let newValue = Math.round(min + clickRatio * (max - min));
+      newValue = Math.max(min, Math.min(max, newValue));
+      
+      // Update the data attributes (source of truth)
+      sliderContainer.setAttribute('data-uis-value', newValue);
+      container.setAttribute('data-uis-fontsize', newValue);
+      
+      // Update the UI
+      updateSliderPosition();
+      updateFontSize();
+      updateStatusIndicator();
+    }
+    
+    // Function to update slider position based on data attribute
+    function updateSliderPosition() {
+      const value = parseInt(sliderContainer.getAttribute('data-uis-value'));
+      const min = parseInt(sliderContainer.getAttribute('data-uis-min'));
+      const max = parseInt(sliderContainer.getAttribute('data-uis-max'));
+      
+      // Calculate position percentage
+      const percentage = ((value - min) / (max - min)) * 100;
+      
+      // Update CSS variable
+      document.documentElement.style.setProperty('--slider-position', `${percentage}%`);
+      
+      // Update value display
+      valueDisplay.textContent = value;
+    }
+    
+    // Function to update font size based on container data attribute
+    function updateFontSize() {
+      const fontSize = container.getAttribute('data-uis-fontsize');
+      document.documentElement.style.setProperty('--font-size', `${fontSize}px`);
+    }
+    
+    // Function to update status indicator based on font size
+    function updateStatusIndicator() {
+      const fontSize = parseInt(container.getAttribute('data-uis-fontsize'));
+      
+      // Determine text size category
+      let category = '';
+      if (fontSize <= 10) {
+        category = 'Extra Small';
+      } else if (fontSize <= 14) {
+        category = 'Small';
+      } else if (fontSize <= 18) {
+        category = 'Medium';
+      } else if (fontSize <= 24) {
+        category = 'Large';
+      } else {
+        category = 'Extra Large';
+      }
+      
+      // Update status text
+      statusText.textContent = category;
+    }
+  </script>
+</body>
+</html>

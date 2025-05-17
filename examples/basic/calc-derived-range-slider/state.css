@@ -1,0 +1,199 @@
+/* State-driven styling using pure CSS calc() functions */
+
+/* Define root variables that act as our state machine */
+:root {
+  /* Base value from JS */
+  --slider-raw-value: 50;
+  --slider-position: 50%;
+  
+  /* Domain boundaries - these define our state transitions */
+  --domain-muted-min: 0;
+  --domain-muted-max: 10;
+  --domain-low-min: 11;
+  --domain-low-max: 30;
+  --domain-medium-min: 31;
+  --domain-medium-max: 70;
+  --domain-high-min: 71;
+  --domain-high-max: 85;
+  --domain-maximum-min: 86;
+  --domain-maximum-max: 100;
+  
+  /* CSS-only domain detection using cascaded calc() ternary operations */
+  --is-in-muted: clamp(0, 
+    calc(
+      (var(--slider-raw-value) >= var(--domain-muted-min)) * 
+      (var(--slider-raw-value) <= var(--domain-muted-max))
+    ), 1);
+  
+  --is-in-low: clamp(0, 
+    calc(
+      (var(--slider-raw-value) >= var(--domain-low-min)) * 
+      (var(--slider-raw-value) <= var(--domain-low-max))
+    ), 1);
+  
+  --is-in-medium: clamp(0, 
+    calc(
+      (var(--slider-raw-value) >= var(--domain-medium-min)) * 
+      (var(--slider-raw-value) <= var(--domain-medium-max))
+    ), 1);
+  
+  --is-in-high: clamp(0, 
+    calc(
+      (var(--slider-raw-value) >= var(--domain-high-min)) * 
+      (var(--slider-raw-value) <= var(--domain-high-max))
+    ), 1);
+  
+  --is-in-maximum: clamp(0, 
+    calc(
+      (var(--slider-raw-value) >= var(--domain-maximum-min)) * 
+      (var(--slider-raw-value) <= var(--domain-maximum-max))
+    ), 1);
+  
+  /* Domain specific colors determined by which domain is active */
+  --domain-color: calc(
+    (var(--is-in-muted) * 149) + 
+    (var(--is-in-low) * 52) + 
+    (var(--is-in-medium) * 41) + 
+    (var(--is-in-high) * 230) + 
+    (var(--is-in-maximum) * 231)
+  );
+  
+  --domain-color-g: calc(
+    (var(--is-in-muted) * 165) + 
+    (var(--is-in-low) * 152) + 
+    (var(--is-in-medium) * 128) + 
+    (var(--is-in-high) * 126) + 
+    (var(--is-in-maximum) * 76)
+  );
+  
+  --domain-color-b: calc(
+    (var(--is-in-muted) * 166) + 
+    (var(--is-in-low) * 219) + 
+    (var(--is-in-medium) * 185) + 
+    (var(--is-in-high) * 34) + 
+    (var(--is-in-maximum) * 60)
+  );
+  
+  /* Domain name as a number code that we'll use for domain-specific text */
+  --domain-name-code: calc(
+    (var(--is-in-muted) * 1) + 
+    (var(--is-in-low) * 2) + 
+    (var(--is-in-medium) * 3) + 
+    (var(--is-in-high) * 4) + 
+    (var(--is-in-maximum) * 5)
+  );
+  
+  /* Calculate relative position within the current domain */
+  --domain-current-min: calc(
+    (var(--is-in-muted) * var(--domain-muted-min)) + 
+    (var(--is-in-low) * var(--domain-low-min)) + 
+    (var(--is-in-medium) * var(--domain-medium-min)) + 
+    (var(--is-in-high) * var(--domain-high-min)) + 
+    (var(--is-in-maximum) * var(--domain-maximum-min))
+  );
+  
+  --domain-current-max: calc(
+    (var(--is-in-muted) * var(--domain-muted-max)) + 
+    (var(--is-in-low) * var(--domain-low-max)) + 
+    (var(--is-in-medium) * var(--domain-medium-max)) + 
+    (var(--is-in-high) * var(--domain-high-max)) + 
+    (var(--is-in-maximum) * var(--domain-maximum-max))
+  );
+  
+  --domain-current-range: calc(var(--domain-current-max) - var(--domain-current-min));
+  
+  --position-in-domain: calc(
+    (var(--slider-raw-value) - var(--domain-current-min)) / var(--domain-current-range)
+  );
+}
+
+/* Apply position to slider components */
+.slider-fill {
+  width: var(--slider-position);
+}
+
+.slider-thumb {
+  left: var(--slider-position);
+}
+
+/* Domain-specific section styling based on which domain is active */
+.domain-section[data-domain="muted"] {
+  box-shadow: inset 0 0 0 calc(var(--is-in-muted) * 2px) #fff;
+  opacity: calc(0.7 + (var(--is-in-muted) * 0.3));
+}
+
+.domain-section[data-domain="low"] {
+  box-shadow: inset 0 0 0 calc(var(--is-in-low) * 2px) #fff;
+  opacity: calc(0.7 + (var(--is-in-low) * 0.3));
+}
+
+.domain-section[data-domain="medium"] {
+  box-shadow: inset 0 0 0 calc(var(--is-in-medium) * 2px) #fff;
+  opacity: calc(0.7 + (var(--is-in-medium) * 0.3));
+}
+
+.domain-section[data-domain="high"] {
+  box-shadow: inset 0 0 0 calc(var(--is-in-high) * 2px) #fff;
+  opacity: calc(0.7 + (var(--is-in-high) * 0.3));
+}
+
+.domain-section[data-domain="maximum"] {
+  box-shadow: inset 0 0 0 calc(var(--is-in-maximum) * 2px) #fff;
+  opacity: calc(0.7 + (var(--is-in-maximum) * 0.3));
+}
+
+/* Apply domain color to components using RGB format for maximum flexibility */
+.slider-fill {
+  background-color: rgb(var(--domain-color), var(--domain-color-g), var(--domain-color-b));
+  opacity: calc(0.7 + (var(--position-in-domain) * 0.3));
+}
+
+.slider-thumb {
+  border-color: rgb(var(--domain-color), var(--domain-color-g), var(--domain-color-b));
+}
+
+/* Show current value using CSS counter */
+.current-value::after {
+  content: attr(data-value);
+  color: rgb(var(--domain-color), var(--domain-color-g), var(--domain-color-b));
+}
+
+/* Show current domain text based on domain code */
+.current-domain::after {
+  content: attr(data-domain);
+  color: rgb(var(--domain-color), var(--domain-color-g), var(--domain-color-b));
+}
+
+/* Domain indicator styling */
+.domain-indicator {
+  border-left: 4px solid rgb(var(--domain-color), var(--domain-color-g), var(--domain-color-b));
+}
+
+/* Domain titles */
+.domain-title::after {
+  content: attr(data-title);
+  color: rgb(var(--domain-color), var(--domain-color-g), var(--domain-color-b));
+}
+
+/* Domain descriptions */
+.domain-text::after {
+  content: attr(data-description);
+}
+
+/* Domain icon */
+.domain-icon {
+  background-color: rgb(var(--domain-color), var(--domain-color-g), var(--domain-color-b));
+  opacity: calc(0.6 + (var(--position-in-domain) * 0.4));
+}
+
+/* Maximum domain animation triggered purely by CSS state */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.domain-icon {
+  animation: pulse calc(var(--is-in-maximum) * 1.5s) infinite ease-in-out;
+  animation-play-state: calc(var(--is-in-maximum) * 1 + (1 - var(--is-in-maximum)) * 0);
+}

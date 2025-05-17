@@ -1,54 +1,15 @@
 {
-  "name": "@uistate/core",
-  "version": "1.0.0",
-  "description": "High-performance UI state management using CSS custom properties",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "src"
+  "name": "uistate-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
-    "test": "jest",
-    "lint": "eslint src",
-    "typecheck": "tsc --noEmit",
-    "prepare": "npm run build"
-  },
-  "keywords": [
-    "state-management",
-    "ui",
-    "react",
-    "css",
-    "performance"
-  ],
-  "author": "Imsirovic Ajdin",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ImsirovicAjdin/uistate.git"
-  },
-  "bugs": {
-    "url": "https://github.com/ImsirovicAjdin/uistate/issues"
-  },
-  "homepage": "https://github.com/ImsirovicAjdin/uistate#readme",
-  "peerDependencies": {
-    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
+    "build": "lerna run build",
+    "test": "lerna run test",
+    "lint": "lerna run lint"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@types/react": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.0.0",
-    "jest": "^29.0.0",
-    "jest-environment-jsdom": "^29.0.0",
-    "@types/jest": "^29.0.0",
-    "ts-jest": "^29.0.0",
-    "tsup": "^8.0.0",
-    "typescript": "^5.0.0",
-    "react": "^18.0.0"
-  },
-  "sideEffects": false
+    "lerna": "^4.0.0"
+  }
 }

@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Attribute-Derived Range Slider Example - UIstate Documentation</title>
+  <link rel="stylesheet" href="main.css">
+  <style>
+    .demo-container {
+      border: 1px solid #e0e0e0;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background-color: #f9f9f9;
+    }
+    
+    .range-slider-container {
+      margin-top: 20px;
+      padding: 20px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      background-color: #fff;
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+    }
+    
+    .range-label {
+      display: block;
+      margin-bottom: 15px;
+      font-weight: 500;
+      font-size: 16px;
+    }
+    
+    .value-display {
+      font-weight: 700;
+      color: #3498db;
+    }
+    
+    .range-track {
+      position: relative;
+      height: 6px;
+      background-color: #e0e0e0;
+      border-radius: 3px;
+      cursor: pointer;
+      margin: 10px 0;
+    }
+    
+    .range-fill {
+      position: absolute;
+      height: 100%;
+      background-color: #3498db;
+      border-radius: 3px;
+      pointer-events: none;
+      width: var(--slider-position, 50%);
+    }
+    
+    .range-thumb {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: #fff;
+      border: 2px solid #3498db;
+      border-radius: 50%;
+      top: 50%;
+      left: var(--slider-position, 50%);
+      transform: translate(-50%, -50%);
+      cursor: grab;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+    
+    .range-thumb:hover {
+      background-color: #f5f5f5;
+    }
+    
+    .range-thumb:active {
+      cursor: grabbing;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Intensity level styles */
+    .range-slider-container[data-uis-intensity="muted"] .range-fill,
+    .muted .range-fill { background-color: #95a5a6; }
+    
+    .range-slider-container[data-uis-intensity="muted"] .value-display,
+    .muted .value-display { color: #95a5a6; }
+    
+    .range-slider-container[data-uis-intensity="low"] .range-fill,
+    .low .range-fill { background-color: #3498db; }
+    
+    .range-slider-container[data-uis-intensity="low"] .value-display,
+    .low .value-display { color: #3498db; }
+    
+    .range-slider-container[data-uis-intensity="medium"] .range-fill,
+    .medium .range-fill { background-color: #2980b9; }
+    
+    .range-slider-container[data-uis-intensity="medium"] .value-display,
+    .medium .value-display { color: #2980b9; }
+    
+    .range-slider-container[data-uis-intensity="high"] .range-fill,
+    .high .range-fill { background-color: #e67e22; }
+    
+    .range-slider-container[data-uis-intensity="high"] .value-display,
+    .high .value-display { color: #e67e22; }
+    
+    .range-slider-container[data-uis-intensity="maximum"] .range-fill,
+    .maximum .range-fill { background-color: #e74c3c; }
+    
+    .range-slider-container[data-uis-intensity="maximum"] .value-display,
+    .maximum .value-display { color: #e74c3c; font-weight: 700; }
+    
+    .range-slider-container::after {
+      content: attr(data-uis-intensity);
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background-color: #3498db;
+      color: white;
+      opacity: 0.8;
+    }
+    
+    .range-slider-container[data-uis-intensity="muted"]::after { background-color: #95a5a6; }
+    .range-slider-container[data-uis-intensity="low"]::after { background-color: #3498db; }
+    .range-slider-container[data-uis-intensity="medium"]::after { background-color: #2980b9; }
+    .range-slider-container[data-uis-intensity="high"]::after { background-color: #e67e22; }
+    .range-slider-container[data-uis-intensity="maximum"]::after { background-color: #e74c3c; }
+
+    .code-example {
+      background-color: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 15px;
+      margin: 15px 0;
+      overflow-x: auto;
+    }
+    
+    .code-example pre {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+    
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    
+    .comparison-table th, .comparison-table td {
+      border: 1px solid #e0e0e0;
+      padding: 10px;
+      text-align: left;
+    }
+    
+    .comparison-table th {
+      background-color: #f5f5f5;
+    }
+    
+    .comparison-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Attribute-Derived Range Slider Example</h1>
+      <p>A pragmatic approach to derived state using UIstate</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <nav class="breadcrumbs">
+      <a href="../index.html">Home</a> &gt;
+      <a href="../examples.html">Examples</a> &gt;
+      <span>Attribute-Derived Range Slider</span>
+    </nav>
+
+    <main>
+    <section class="intro">
+      <h2>Introduction</h2>
+      <p>
+        This example demonstrates an alternative approach to derived state in UIstate that
+        offers a balance between declarative CSS and minimal JavaScript.
+      </p>
+      <p>
+        Unlike the <a href="range-slider.html">CSS-Derived Range Slider</a> which derives state entirely
+        through CSS, this example uses a small amount of JavaScript to compute derived state categories
+        based on numeric values, and then stores these categories as data attributes that CSS can
+        easily select against.
+      </p>
+      <p>
+        This approach provides excellent developer experience, clean code, and a maintainable
+        solution for scenarios where CSS alone has limitations, such as numeric range comparisons.
+      </p>
+    </section>
+
+    <section class="demo">
+      <h2>Live Demo</h2>
+      <div class="demo-container">
+        <div class="range-slider-container" id="demo-slider" data-uis-value="50" data-uis-min="0" data-uis-max="100" data-uis-intensity="medium">
+          <label class="range-label">Volume: <span class="value-display">50</span></label>
+          <div class="range-track">
+            <div class="range-fill"></div>
+            <div class="range-thumb"></div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        // Demo implementation
+        document.addEventListener('DOMContentLoaded', function() {
+          // Get references to elements
+          const container = document.querySelector('#demo-slider');
+          const valueDisplay = container.querySelector('.value-display');
+          const thumb = container.querySelector('.range-thumb');
+          const track = container.querySelector('.range-track');
+          
+          // Initialize from data attributes
+          updateSliderPosition();
+          
+          // Add event listeners for mouse/touch interactions
+          thumb.addEventListener('mousedown', startDrag);
+          track.addEventListener('click', jumpToPosition);
+          
+          // Function to start dragging the thumb
+          function startDrag(e) {
+            e.preventDefault();
+            
+            // Add event listeners for drag and release
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('mouseup', stopDrag);
+            
+            // Store initial position for drag calculation
+            const initialX = e.clientX;
+            const initialValue = parseInt(container.getAttribute('data-uis-value'));
+            
+            // Drag function
+            function drag(e) {
+              const trackRect = track.getBoundingClientRect();
+              const min = parseInt(container.getAttribute('data-uis-min'));
+              const max = parseInt(container.getAttribute('data-uis-max'));
+              const trackWidth = trackRect.width;
+              
+              // Calculate new position based on drag distance
+              const dragDistance = e.clientX - initialX;
+              const dragRatio = dragDistance / trackWidth;
+              const valueRange = max - min;
+              const valueDelta = dragRatio * valueRange;
+              
+              // Calculate new value and constrain to min/max
+              let newValue = Math.round(initialValue + valueDelta);
+              newValue = Math.max(min, Math.min(max, newValue));
+              
+              // Update the data attribute (source of truth)
+              container.setAttribute('data-uis-value', newValue);
+              
+              // Update the UI
+              updateSliderPosition();
+              updateIntensityCategory(newValue);
+            }
+            
+            // Stop drag function
+            function stopDrag() {
+              document.removeEventListener('mousemove', drag);
+              document.removeEventListener('mouseup', stopDrag);
+            }
+          }
+          
+          // Function to jump to clicked position
+          function jumpToPosition(e) {
+            const trackRect = track.getBoundingClientRect();
+            const min = parseInt(container.getAttribute('data-uis-min'));
+            const max = parseInt(container.getAttribute('data-uis-max'));
+            const trackWidth = trackRect.width;
+            
+            // Calculate click position relative to track
+            const clickX = e.clientX - trackRect.left;
+            const clickRatio = clickX / trackWidth;
+            
+            // Calculate new value and constrain to min/max
+            let newValue = Math.round(min + clickRatio * (max - min));
+            newValue = Math.max(min, Math.min(max, newValue));
+            
+            // Update the data attribute (source of truth)
+            container.setAttribute('data-uis-value', newValue);
+            
+            // Update the UI
+            updateSliderPosition();
+            updateIntensityCategory(newValue);
+          }
+          
+          // Function to update slider position based on data attribute
+          function updateSliderPosition() {
+            const value = parseInt(container.getAttribute('data-uis-value'));
+            const min = parseInt(container.getAttribute('data-uis-min'));
+            const max = parseInt(container.getAttribute('data-uis-max'));
+            
+            // Calculate position percentage
+            const percentage = ((value - min) / (max - min)) * 100;
+            
+            // Update CSS variable
+            document.documentElement.style.setProperty('--slider-position', `${percentage}%`);
+            
+            // Update value display
+            valueDisplay.textContent = value;
+          }
+          
+          // Function to update intensity category based on value
+          function updateIntensityCategory(value) {
+            let category = '';
+            
+            // Determine the appropriate intensity category
+            if (value <= 10) {
+              category = 'muted';
+            } else if (value <= 30) {
+              category = 'low';
+            } else if (value <= 70) {
+              category = 'medium';
+            } else if (value <= 85) {
+              category = 'high';
+            } else {
+              category = 'maximum';
+            }
+            
+            // Update the data attribute (derived state)
+            container.setAttribute('data-uis-intensity', category);
+          }
+        });
+      </script>
+    </section>
+
+    <section class="implementation">
+      <h2>Implementation Walkthrough</h2>
+      
+      <h3>HTML Structure</h3>
+      <p>
+        The range slider consists of a container with data attributes for both the raw value
+        and the derived intensity category:
+      </p>
+      <div class="code-example">
+        <pre><code>&lt;div class="range-slider-container" 
+     data-uis-value="50" 
+     data-uis-min="0" 
+     data-uis-max="100" 
+     data-uis-intensity="medium"&gt;
+  &lt;label class="range-label"&gt;Volume: &lt;span class="value-display"&gt;50&lt;/span&gt;&lt;/label&gt;
+  &lt;div class="range-track"&gt;
+    &lt;div class="range-fill"&gt;&lt;/div&gt;
+    &lt;div class="range-thumb"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+      
+      <h3>State Management</h3>
+      <p>
+        The state is managed through two key data attributes:
+      </p>
+      <ul>
+        <li><code>data-uis-value</code>: The raw numeric value (source of truth)</li>
+        <li><code>data-uis-intensity</code>: The derived categorical state based on value ranges</li>
+      </ul>
+      <p>
+        When the user interacts with the slider, JavaScript updates both attributes:
+        first the raw value, and then the derived intensity category.
+      </p>
+      
+      <h3>JavaScript for State Derivation</h3>
+      <p>
+        The key difference in this approach is the use of JavaScript to derive the intensity
+        category based on the raw value:
+      </p>
+      <div class="code-example">
+        <pre><code>// Function to update intensity category based on value
+function updateIntensityCategory(value) {
+  let category = '';
+  
+  // Determine the appropriate intensity category
+  if (value <= 10) {
+    category = 'muted';
+  } else if (value <= 30) {
+    category = 'low';
+  } else if (value <= 70) {
+    category = 'medium';
+  } else if (value <= 85) {
+    category = 'high';
+  } else {
+    category = 'maximum';
+  }
+  
+  // Update the data attribute (derived state)
+  container.setAttribute('data-uis-intensity', category);
+}</code></pre>
+      </div>
+      <p>
+        This function is called whenever the slider value changes, ensuring that the
+        derived state is always in sync with the raw value.
+      </p>
+      
+      <h3>CSS for Styling Based on Derived State</h3>
+      <p>
+        The CSS can now easily select against the derived intensity category:
+      </p>
+      <div class="code-example">
+        <pre><code>/* Apply styles based on derived intensity attribute */
+.range-slider-container[data-uis-intensity="muted"] {
+  --intensity-color: #95a5a6;
+}
+
+.range-slider-container[data-uis-intensity="low"] {
+  --intensity-color: #3498db;
+}
+
+/* Additional intensity styles... */
+
+/* Apply the intensity color to components */
+.range-fill {
+  background-color: var(--intensity-color);
+}
+
+.value-display {
+  color: var(--intensity-color);
+}</code></pre>
+      </div>
+      <p>
+        This approach is much more concise than listing every possible value in CSS selectors.
+      </p>
+    </section>
+
+    <section class="key-insights">
+      <h2>Key Insights</h2>
+      
+      <h3>Hybrid State Derivation</h3>
+      <p>
+        This example demonstrates a hybrid approach to state derivation:
+      </p>
+      <ul>
+        <li>JavaScript handles the logical derivation of categories from numeric values</li>
+        <li>CSS handles all styling based on those derived categories</li>
+        <li>DOM attributes serve as the source of truth for both raw and derived state</li>
+      </ul>
+      <p>
+        This separation of concerns aligns with the strengths of each technology:
+        JavaScript for logic, CSS for styling.
+      </p>
+      
+      <h3>Developer Experience Benefits</h3>
+      <p>
+        The attribute-derived approach offers several DX benefits:
+      </p>
+      <ul>
+        <li>More maintainable code with fewer CSS selectors</li>
+        <li>Clearer representation of derived state in the DOM</li>
+        <li>Easier debugging with explicit state categories</li>
+        <li>Self-documenting HTML with meaningful attribute names</li>
+      </ul>
+      <p>
+        These benefits make the code more approachable and reduce the learning curve for developers.
+      </p>
+      
+      <h3>JavaScript as a Tool, Not a Crutch</h3>
+      <p>
+        This approach uses JavaScript judiciously for a specific task that CSS alone cannot
+        handle elegantly: numeric comparisons for range determination. Rather than forcing CSS
+        to do something it wasn't designed for, this approach leverages the right tool for the job.
+      </p>
+      <p>
+        Importantly, JavaScript is only used to update attributes, not to directly manipulate the DOM
+        or apply styles. The styling logic remains entirely in CSS, maintaining the declarative
+        nature of UIstate.
+      </p>
+      
+      <h3>CSS vs. JavaScript Tradeoffs</h3>
+      <p>
+        Here's a comparison of this approach versus a pure CSS approach:
+      </p>
+      <table class="comparison-table">
+        <tr>
+          <th>Criteria</th>
+          <th>Attribute-Derived (This Example)</th>
+          <th>CSS-Derived</th>
+        </tr>
+        <tr>
+          <td>Lines of CSS</td>
+          <td>Less (one selector per category)</td>
+          <td>More (one selector per possible value)</td>
+        </tr>
+        <tr>
+          <td>JavaScript Required</td>
+          <td>Yes (minimal, focused on logic)</td>
+          <td>No (pure CSS)</td>
+        </tr>
+        <tr>
+          <td>DOM Explicitness</td>
+          <td>High (derived state visible in attributes)</td>
+          <td>Low (derived state only in CSS)</td>
+        </tr>
+        <tr>
+          <td>Developer Experience</td>
+          <td>Better for numeric ranges</td>
+          <td>Better for limited discrete states</td>
+        </tr>
+        <tr>
+          <td>Maintainability</td>
+          <td>Higher for complex ranges</td>
+          <td>Higher for simple toggles</td>
+        </tr>
+        <tr>
+          <td>Performance</td>
+          <td>Better for many values (less CSS)</td>
+          <td>Better for few values (no JS)</td>
+        </tr>
+      </table>
+    </section>
+
+    <section class="relationship-to-uistate">
+      <h2>Relationship to UIstate Philosophy</h2>
+      <p>
+        This example might seem to deviate from UIstate's pure CSS approach, but it actually
+        aligns perfectly with the core principles:
+      </p>
+      <ul>
+        <li><strong>DOM as Source of Truth</strong>: All state (raw and derived) is stored in data attributes</li>
+        <li><strong>Declarative State Relationships</strong>: Styling is still declaratively tied to state</li>
+        <li><strong>Progressive Enhancement</strong>: Works at HTML, CSS, and JavaScript layers</li>
+      </ul>
+      <p>
+        UIstate isn't about avoiding JavaScript entirely, but about using it judiciously
+        where it makes sense, while keeping the DOM as the source of truth. This example
+        demonstrates that principle perfectly.
+      </p>
+      <p>
+        Think of it this way: CSS is excellent at declaring "when X, apply Y" but struggles
+        with "if value is between A and B, then X is true." JavaScript bridges that gap,
+        allowing for more expressive state derivation while still maintaining a declarative
+        styling approach.
+      </p>
+    </section>
+
+    <section class="when-to-use">
+      <h2>When to Use This Approach</h2>
+      <p>
+        The attribute-derived approach is particularly well-suited for:
+      </p>
+      <ul>
+        <li>Components with numeric state that maps to categorical derived states</li>
+        <li>Scenarios with many possible values but few derived categories</li>
+        <li>Complex state derivation logic that would be verbose or impossible in pure CSS</li>
+        <li>Projects where developer experience and maintainability are priorities</li>
+      </ul>
+      <p>
+        Conversely, the pure CSS approach might be better for:
+      </p>
+      <ul>
+        <li>Simple binary or discrete state (on/off, small/medium/large)</li>
+        <li>Projects where JavaScript should be absolutely minimized</li>
+        <li>Demonstrating the power of CSS for state management</li>
+      </ul>
+      <p>
+        Both approaches are valid within the UIstate philosophy, and choosing between them
+        depends on the specific requirements of your component.
+      </p>
+    </section>
+
+    <section class="next-steps">
+      <h2>Taking It Further</h2>
+      <p>This example demonstrates a basic attribute-derived range slider. You could extend it by:</p>
+      <ul>
+        <li>Adding more derived attributes for different aspects of the state</li>
+        <li>Creating a reusable function for state derivation that can be used across components</li>
+        <li>Implementing more complex derivation logic that would be impossible in pure CSS</li>
+        <li>Integrating this approach with custom elements or other component systems</li>
+      </ul>
+    </section>
+    </main>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 UIstate - A declarative state management approach for the web</p>
+    </div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,177 @@
+/* State-driven styling for the domain-font-adjuster example */
+
+/* CSS Variables for state-driven properties */
+.domain-adjuster-container {
+  --slider-position: 50%;
+  --domain-position: 0.5;
+}
+
+/* Apply position to slider components */
+.slider-fill {
+  width: var(--slider-position);
+}
+
+.slider-thumb {
+  left: var(--slider-position);
+}
+
+/* Active domain section styling */
+.domain-section.active {
+  box-shadow: inset 0 0 0 2px #fff;
+  opacity: 1;
+}
+
+.domain-section.active .domain-label {
+  opacity: 1;
+  font-weight: 700;
+}
+
+/* Domain-specific styling */
+.domain-adjuster-container[data-active-domain="small"] {
+  --domain-color: #95a5a6;
+  --domain-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%2395a5a6' d='M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z'/%3E%3C/svg%3E");
+}
+
+.domain-adjuster-container[data-active-domain="medium"] {
+  --domain-color: #3498db;
+  --domain-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%233498db' d='M3 9h18V7H3v2zm0 4h18v-2H3v2zm0 4h18v-2H3v2z'/%3E%3C/svg%3E");
+}
+
+.domain-adjuster-container[data-active-domain="large"] {
+  --domain-color: #2980b9;
+  --domain-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%232980b9' d='M4 9h16v2H4V9zm0 4h16v2H4v-2z'/%3E%3C/svg%3E");
+}
+
+.domain-adjuster-container[data-active-domain="x-large"] {
+  --domain-color: #e74c3c;
+  --domain-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23e74c3c' d='M4 7h16v4H4V7zm0 6h16v4H4v-4z'/%3E%3C/svg%3E");
+}
+
+/* Apply domain-specific styles to components */
+.slider-fill {
+  background-color: var(--domain-color);
+  opacity: calc(0.7 + (var(--domain-position) * 0.3));
+}
+
+.slider-thumb {
+  border-color: var(--domain-color);
+}
+
+.current-value {
+  color: var(--domain-color);
+}
+
+.current-domain {
+  color: var(--domain-color);
+}
+
+.domain-indicator {
+  border-left: 4px solid var(--domain-color);
+}
+
+.domain-description h3 {
+  color: var(--domain-color);
+}
+
+.domain-icon {
+  background-image: var(--domain-icon);
+  background-size: cover;
+  opacity: calc(0.6 + (var(--domain-position) * 0.4));
+}
+
+/* Font preview panel state-based enhancements */
+.domain-adjuster-container[data-active-domain="small"] .font-preview-panel {
+  border-top: 3px solid var(--domain-color);
+}
+
+.domain-adjuster-container[data-active-domain="medium"] .font-preview-panel {
+  border-top: 3px solid var(--domain-color);
+}
+
+.domain-adjuster-container[data-active-domain="large"] .font-preview-panel {
+  border-top: 3px solid var(--domain-color);
+}
+
+.domain-adjuster-container[data-active-domain="x-large"] .font-preview-panel {
+  border-top: 3px solid var(--domain-color);
+}
+
+/* Font preview text line height adjustments based on domain */
+.domain-adjuster-container[data-active-domain="small"] .font-preview {
+  line-height: 1.3;
+}
+
+.domain-adjuster-container[data-active-domain="medium"] .font-preview {
+  line-height: 1.5;
+}
+
+.domain-adjuster-container[data-active-domain="large"] .font-preview {
+  line-height: 1.7;
+}
+
+.domain-adjuster-container[data-active-domain="x-large"] .font-preview {
+  line-height: 1.8;
+}
+
+/* Font preview content area size adjustments - smaller for larger text */
+.domain-adjuster-container[data-active-domain="small"] .font-preview {
+  max-height: none;
+}
+
+.domain-adjuster-container[data-active-domain="medium"] .font-preview {
+  max-height: none;
+}
+
+.domain-adjuster-container[data-active-domain="large"] .font-preview {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.domain-adjuster-container[data-active-domain="x-large"] .font-preview {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+/* Domain-specific transition effects */
+.domain-adjuster-container[data-active-domain="small"] .font-preview,
+.domain-adjuster-container[data-active-domain="medium"] .font-preview {
+  transition: font-size 0.3s ease, line-height 0.3s ease;
+}
+
+.domain-adjuster-container[data-active-domain="large"] .font-preview,
+.domain-adjuster-container[data-active-domain="x-large"] .font-preview {
+  transition: font-size 0.25s ease, line-height 0.25s ease;
+}
+
+/* X-large domain advanced styling */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.domain-adjuster-container[data-active-domain="x-large"] .domain-icon {
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+/* Typography enhancement for the preview based on size domain */
+.domain-adjuster-container[data-active-domain="small"] .font-preview {
+  letter-spacing: -0.01em;
+  word-spacing: 0.02em;
+}
+
+.domain-adjuster-container[data-active-domain="medium"] .font-preview {
+  letter-spacing: 0;
+  word-spacing: 0;
+}
+
+.domain-adjuster-container[data-active-domain="large"] .font-preview {
+  letter-spacing: 0.01em;
+  word-spacing: 0.03em;
+}
+
+.domain-adjuster-container[data-active-domain="x-large"] .font-preview {
+  letter-spacing: 0.02em;
+  word-spacing: 0.05em;
+  font-weight: 500;
+}

@@ -1,0 +1,91 @@
+/* State-driven styling for the font-adjuster example */
+
+/* Using CSS variables for font size */
+:root {
+  --font-size: 26px;
+}
+
+/* Apply the font size from CSS variable to the sample text */
+.sample-text {
+  font-size: var(--font-size);
+}
+
+/* Disable decrease button when at minimum size */
+.font-adjuster[data-uis-fontsize="10"] [data-uis-action="decrease"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #95a5a6;
+}
+
+/* Disable increase button when at maximum size */
+.font-adjuster[data-uis-fontsize="40"] [data-uis-action="increase"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #95a5a6;
+}
+
+/* Derived state: text size categories */
+.font-adjuster[data-uis-fontsize="10"],
+.font-adjuster[data-uis-fontsize="11"],
+.font-adjuster[data-uis-fontsize="12"],
+.font-adjuster[data-uis-fontsize="13"],
+.font-adjuster[data-uis-fontsize="14"] {
+  --text-size-category: "small";
+}
+
+.font-adjuster[data-uis-fontsize="15"],
+.font-adjuster[data-uis-fontsize="16"],
+.font-adjuster[data-uis-fontsize="17"],
+.font-adjuster[data-uis-fontsize="18"],
+.font-adjuster[data-uis-fontsize="19"],
+.font-adjuster[data-uis-fontsize="20"],
+.font-adjuster[data-uis-fontsize="21"],
+.font-adjuster[data-uis-fontsize="22"],
+.font-adjuster[data-uis-fontsize="23"],
+.font-adjuster[data-uis-fontsize="24"] {
+  --text-size-category: "medium";
+}
+
+.font-adjuster[data-uis-fontsize="25"],
+.font-adjuster[data-uis-fontsize="26"],
+.font-adjuster[data-uis-fontsize="27"],
+.font-adjuster[data-uis-fontsize="28"],
+.font-adjuster[data-uis-fontsize="29"],
+.font-adjuster[data-uis-fontsize="30"],
+.font-adjuster[data-uis-fontsize="31"],
+.font-adjuster[data-uis-fontsize="32"],
+.font-adjuster[data-uis-fontsize="33"],
+.font-adjuster[data-uis-fontsize="34"] {
+  --text-size-category: "large";
+}
+
+.font-adjuster[data-uis-fontsize="35"],
+.font-adjuster[data-uis-fontsize="36"],
+.font-adjuster[data-uis-fontsize="37"],
+.font-adjuster[data-uis-fontsize="38"],
+.font-adjuster[data-uis-fontsize="39"],
+.font-adjuster[data-uis-fontsize="40"] {
+  --text-size-category: "extra-large";
+}
+
+/* Apply styles based on text size category */
+.font-adjuster[style*="--text-size-category: \"small\""] .sample-text {
+  color: #7f8c8d;
+  line-height: 1.4;
+}
+
+.font-adjuster[style*="--text-size-category: \"medium\""] .sample-text {
+  color: #2c3e50;
+  line-height: 1.5;
+}
+
+.font-adjuster[style*="--text-size-category: \"large\""] .sample-text {
+  color: #2980b9;
+  line-height: 1.6;
+}
+
+.font-adjuster[style*="--text-size-category: \"extra-large\""] .sample-text {
+  color: #8e44ad;
+  line-height: 1.7;
+  font-weight: 500;
+}

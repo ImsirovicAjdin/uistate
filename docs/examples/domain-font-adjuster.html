@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Domain Font Adjuster Example - UIstate Documentation</title>
+  <link rel="stylesheet" href="main.css">
+  <style>
+    .demo-container {
+      border: 1px solid #e0e0e0;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      background-color: #f9f9f9;
+    }
+    
+    .code-example {
+      background-color: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 15px;
+      margin: 15px 0;
+      overflow-x: auto;
+    }
+    
+    .code-example pre {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Domain Font Adjuster Example</h1>
+      <p>Using domain-based state derivation for typography adjustment</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <nav class="breadcrumbs">
+      <a href="../index.html">Home</a> &gt;
+      <a href="../examples.html">Examples</a> &gt;
+      <span>Domain Font Adjuster</span>
+    </nav>
+
+    <main>
+    <section class="intro">
+      <h2>Introduction</h2>
+      <p>
+        The Domain Font Adjuster demonstrates how to apply the domain-based state derivation approach 
+        to typography controls. This example divides font sizes into meaningful domains (small, medium, large, x-large)
+        and provides both visual feedback and typography adjustments based on the active domain.
+      </p>
+      <p>
+        Unlike traditional sliders that only track a numeric value, this approach models state as a combination of
+        a discrete domain (category) and a continuous position within that domain. This creates a more intuitive
+        user experience with meaningful feedback about the text size context.
+      </p>
+    </section>
+
+    <section class="demo">
+      <h2>Live Demo</h2>
+      <div class="demo-container">
+        <iframe src="../../examples/basic/domain-font-adjuster/index.html" width="100%" height="450" frameborder="0"></iframe>
+      </div>
+      <p class="demo-link">
+        <a href="../../examples/basic/domain-font-adjuster/index.html" target="_blank">Open in new tab</a>
+      </p>
+    </section>
+
+    <section class="implementation">
+      <h2>Implementation Walkthrough</h2>
+      
+      <h3>HTML Structure</h3>
+      <p>
+        The font adjuster interface consists of domain sections, a slider control, value and domain displays, and a preview panel.
+        The container element stores the current value, min/max ranges, and active domain as data attributes.
+      </p>
+      <div class="code-example">
+        <pre><code>&lt;div class="domain-adjuster-container" data-uis-value="16" data-uis-min="8" 
+     data-uis-max="32" data-active-domain="medium" style="--domain-position: 0.5;"&gt;
+  &lt;div class="domain-sections"&gt;
+    &lt;div class="domain-section" data-domain="small" data-domain-start="8" data-domain-end="12"&gt;
+      &lt;span class="domain-label"&gt;Small&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;div class="domain-section" data-domain="medium" data-domain-start="13" data-domain-end="18"&gt;
+      &lt;span class="domain-label"&gt;Medium&lt;/span&gt;
+    &lt;/div&gt;
+    &lt;!-- Other domain sections... --&gt;
+  &lt;/div&gt;
+  
+  &lt;div class="slider-track"&gt;
+    &lt;div class="slider-fill"&gt;&lt;/div&gt;
+    &lt;div class="slider-thumb"&gt;&lt;/div&gt;
+  &lt;/div&gt;
+  
+  &lt;div class="value-display"&gt;
+    &lt;div class="current-value"&gt;&lt;span id="size-value"&gt;16&lt;/span&gt;px&lt;/div&gt;
+    &lt;div class="current-domain"&gt;Medium&lt;/div&gt;
+  &lt;/div&gt;
+  
+  &lt;div class="font-preview-panel"&gt;
+    &lt;!-- Preview content... --&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+      </div>
+      
+      <h3>Domain-Based State Management</h3>
+      <p>
+        The core concept is defining separate domains for font sizes and tracking both the raw numeric value
+        and the active domain. The domain calculation determines which domain the current value belongs to
+        and calculates the relative position within that domain.
+      </p>
+      <div class="code-example">
+        <pre><code>// Domain definitions
+const domains = [
+  { 
+    name: 'small', 
+    start: 8, 
+    end: 12, 
+    label: 'Small', 
+    description: 'Compact text for dense information displays and fine print.'
+  },
+  // Other domains...
+];
+
+function updateActiveDomain() {
+  const value = parseInt(container.getAttribute('data-uis-value'));
+  
+  // Find the domain that contains this value
+  const activeDomain = domains.find(d => 
+    value >= d.start && value <= d.end
+  );
+  
+  if (activeDomain) {
+    // Update the active domain attribute
+    container.setAttribute('data-active-domain', activeDomain.name);
+    
+    // Calculate position within domain (0 to 1)
+    const domainWidth = activeDomain.end - activeDomain.start;
+    const domainPosition = (value - activeDomain.start) / domainWidth;
+    container.style.setProperty('--domain-position', domainPosition);
+    
+    // Update the UI for this domain
+    domainDisplay.textContent = activeDomain.label;
+    // Update domain description...
+  }
+}</code></pre>
+      </div>
+      
+      <h3>CSS State Derivation</h3>
+      <p>
+        The CSS uses the <code>data-active-domain</code> attribute and <code>--domain-position</code> CSS variable 
+        to style elements based on the current state:
+      </p>
+      <div class="code-example">
+        <pre><code>/* Domain-specific styling */
+.domain-adjuster-container[data-active-domain="small"] {
+  --domain-color: #95a5a6;
+  --domain-icon: url("data:image/svg+xml,...");
+}
+
+.domain-adjuster-container[data-active-domain="medium"] {
+  --domain-color: #3498db;
+  --domain-icon: url("data:image/svg+xml,...");
+}
+
+/* Apply domain styling */
+.slider-fill {
+  background-color: var(--domain-color);
+}
+
+/* Fine-tuned typography adjustments based on domains */
+.domain-adjuster-container[data-active-domain="small"] .font-preview {
+  letter-spacing: -0.01em;
+  word-spacing: -0.05em;
+  line-height: calc(1.2 + var(--domain-position) * 0.2);
+}</code></pre>
+      </div>
+    </section>
+
+    <section class="key-insights">
+      <h2>Key Insights</h2>
+      
+      <h3>Domain-Based State Model</h3>
+      <p>
+        This example introduces a powerful concept: modeling UI state as a combination of
+        a discrete domain (category) and a relative position within that domain.
+      </p>
+      <ul>
+        <li><strong>Dual Nature of State:</strong> Each state has both an absolute value (16px) and a semantic meaning (medium size, 50% through the medium range)</li>
+        <li><strong>Enhanced UX:</strong> Users understand both the precise value and its contextual meaning</li>
+        <li><strong>Derived Values:</strong> Related properties like letter-spacing and line-height are derived from the domain and position</li>
+        <li><strong>Visual Semantics:</strong> Domain-specific colors and icons provide immediate visual feedback</li>
+      </ul>
+      
+      <h3>Advantages Over Pure Numeric State</h3>
+      <p>
+        Compared to a pure numeric slider, the domain approach offers several benefits:
+      </p>
+      <ul>
+        <li><strong>Meaningful Categories:</strong> Users understand what "small" or "large" means in context</li>
+        <li><strong>Consistent Aesthetics:</strong> Typography properties change harmoniously within domains</li>
+        <li><strong>Reduced Cognitive Load:</strong> Visual cues help users intuitively grasp the current state</li>
+        <li><strong>Enhanced Accessibility:</strong> Multiple feedback mechanisms (color, text, position)</li>
+      </ul>
+      
+      <h3>Data Attributes for State Classification</h3>
+      <p>
+        The example showcases how data attributes can be used for state classification:
+      </p>
+      <ul>
+        <li><code>data-uis-value</code> stores the raw numeric value</li>
+        <li><code>data-active-domain</code> stores the classification result</li>
+        <li><code>data-domain-start/end</code> define domain boundaries</li>
+        <li>CSS then selects and styles based on these classifications</li>
+      </ul>
+    </section>
+
+    <section class="next-steps">
+      <h2>Taking It Further</h2>
+      
+      <h3>Responsive Domain Boundaries</h3>
+      <p>
+        The current implementation uses fixed domain boundaries. Consider enhancing it with:
+      </p>
+      <ul>
+        <li>Context-sensitive domain boundaries that adapt to viewport size</li>
+        <li>User-customizable domain definitions for personalized experiences</li>
+        <li>Device-specific domain boundaries to account for different display characteristics</li>
+      </ul>
+      
+      <h3>Advanced Typography Control</h3>
+      <p>
+        Expand the typography control system to include:
+      </p>
+      <ul>
+        <li>Font weight adjustments synchronized with size domains</li>
+        <li>Fluid typography that responds to both domain position and viewport size</li>
+        <li>Control over additional typography properties like font family and text transform</li>
+        <li>Accessibility enhancements that adapt to user preferences</li>
+      </ul>
+      
+      <h3>Hierarchical Domain Systems</h3>
+      <p>
+        Extend the domain concept to create hierarchical systems:
+      </p>
+      <ul>
+        <li>Nested domains for more granular control within categories</li>
+        <li>Related domain systems for controlling multiple aspects of typography</li>
+        <li>Typography hierarchies for headings, body text, and UI elements</li>
+      </ul>
+      
+      <h3>Compare with Explicit Approach</h3>
+      <p>
+        For an alternative implementation of a font adjuster, check out the <a href="explicit-font-adjuster.html">Explicit Font Adjuster</a>
+        example, which takes a different approach using explicit selectors for each possible value.
+      </p>
+    </section>
+    </main>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 UIstate - A declarative state management approach for the web</p>
+    </div>
+  </footer>
+</body>
+</html>

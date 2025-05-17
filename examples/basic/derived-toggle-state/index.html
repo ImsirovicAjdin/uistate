@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UIstate - Derived Toggle State Example</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="state.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Derived Toggle State</h1>
+            <p>This example demonstrates how CSS variables can create derived state from multiple toggles.</p>
+            <a href="../../../docs/examples/derived-toggle-state.html" class="docs-link">Docs</a>
+        </header>
+
+        <main>
+            <section class="toggles-container">
+                <h2>Feature Toggles</h2>
+                
+                <!-- Feature A Toggle -->
+                <button class="feature-toggle" data-uis-feature="a" data-uis-state="off">
+                    Feature A
+                </button>
+                
+                <!-- Feature B Toggle -->
+                <button class="feature-toggle" data-uis-feature="b" data-uis-state="off">
+                    Feature B
+                </button>
+                
+                <!-- Feature C Toggle -->
+                <button class="feature-toggle" data-uis-feature="c" data-uis-state="off">
+                    Feature C
+                </button>
+            </section>
+
+            <section class="status-container">
+                <h2>System Status</h2>
+                
+                <!-- Status indicator that changes based on all features being enabled -->
+                <div class="system-status">
+                    <div class="status-indicator"></div>
+                    <p class="status-text">System Status</p>
+                </div>
+                
+                <!-- Progress indicator that shows how many features are enabled -->
+                <div class="progress-indicator">
+                    <div class="progress-bar"></div>
+                    <p class="progress-text">Enabled Features</p>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>UIstate Example - Attribute-Driven State Inheritance with CSS Variables</p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize CSS variables for state
+        document.documentElement.style.setProperty('--uis-feature-a-active', '0');
+        document.documentElement.style.setProperty('--uis-feature-b-active', '0');
+        document.documentElement.style.setProperty('--uis-feature-c-active', '0');
+        
+        // Initialize progress text
+        document.querySelector('.progress-text').setAttribute('data-uis-count', '0');
+        
+        // Function to update derived state display
+        function updateDerivedState() {
+            // Get all active features
+            const activeFeatures = document.querySelectorAll('.feature-toggle[data-uis-state="on"]').length;
+            
+            // Update progress text
+            document.querySelector('.progress-text').setAttribute('data-uis-count', activeFeatures);
+        }
+        
+        // Add event listeners to toggle buttons
+        document.querySelectorAll('.feature-toggle').forEach(button => {
+            button.addEventListener('click', function() {
+                const feature = this.getAttribute('data-uis-feature');
+                const currentState = this.getAttribute('data-uis-state');
+                const newState = currentState === 'on' ? 'off' : 'on';
+                const numericState = newState === 'on' ? '1' : '0';
+                
+                // Update data attribute (ADSI approach)
+                this.setAttribute('data-uis-state', newState);
+                
+                // Update CSS variable (for derived state)
+                document.documentElement.style.setProperty(`--uis-feature-${feature}-active`, numericState);
+                
+                // Update derived state display
+                updateDerivedState();
+            });
+        });
+    </script>
+</body>
+</html>
