@@ -2,19 +2,14 @@
   "name": "@uistate/core",
   "version": "2.0.0",
   "description": "High-performance UI state management using CSS custom properties and ADSI (Attribute-Driven State Inheritance)",
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "src/index.js",
+  "module": "src/index.js",
   "files": [
-    "dist",
     "src"
   ],
   "scripts": {
-    "build": "tsup src/index.ts --format cjs,esm --dts",
     "test": "jest",
-    "lint": "eslint src",
-    "typecheck": "tsc --noEmit",
-    "prepare": "npm run build"
+    "lint": "eslint src"
   },
   "keywords": [
     "state-management",
@@ -40,18 +35,9 @@
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "@types/react": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
     "eslint": "^8.0.0",
     "jest": "^29.0.0",
-    "jest-environment-jsdom": "^29.0.0",
-    "@types/jest": "^29.0.0",
-    "ts-jest": "^29.0.0",
-    "tsup": "^8.0.0",
-    "typescript": "^5.0.0",
-    "react": "^18.0.0"
+    "jest-environment-jsdom": "^29.0.0"
   },
   "sideEffects": false
 }
