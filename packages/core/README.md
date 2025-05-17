@@ -1,122 +1,105 @@
 # @uistate/core
 
-**author**: Ajdin Imsirovic <ajdika@live.com> (GitHub),
+**author**: Ajdin Imsirovic <ajdika@live.com> (GitHub)  
 **maintainer**: uistate <ajdika.i@gmail.com> (npm)
 
-High-performance UI state management using CSS custom properties and a number of other novel ideas. Focused heavily on DX and performance, in that order.
+High-performance UI state management using CSS custom properties and ADSI (Attribute-Driven State Inheritance). Focused heavily on DX and performance.
 
 ## Features
 
-- ~~🚀 44% faster state updates than Redux~~ Potentially O(1) state updates!
-- ~~📉 12.5% lower memory usage~~ Large memory usage savings (perf pending...)
+- 🚀 Potentially O(1) state updates using CSS custom properties
+- 📉 Significant memory savings compared to virtual DOM approaches
 - 🎯 Zero configuration
-- 🔄 Automatic reactivity
+- 🔄 Automatic reactivity through CSS cascade
 - 🎨 Framework agnostic
-- 📦 Tiny bundle size (~1KB)
-- ~~💪 Full TypeScript support~~ Sorry, JS-only for a while...
-- ~~📊 Optional performance monitoring~~ In progress (perf pending...)
+- 📦 Tiny bundle size (~2KB)
+- 🧩 Modular architecture with dedicated modules for CSS state and events
 
 ## Installation
 
 ```bash
 # Install the core package
 npm install @uistate/core
-
-# Optional: Install performance monitoring
-npm install @uistate/performance
 ```
 
 ## Quick Start
 
-```typescript
-import { UIState } from '@uistate/core';
+```javascript
+import { cssState, eventState } from '@uistate/core';
 
 // Initialize state
-UIState.init();
+cssState.init();
 
-// Set state
-UIState.setState('count', 0);
+// Set state via CSS variables
+cssState.set('--counter-value', '0');
 
 // Get state
-const count = UIState.getState('count');
+const count = parseInt(cssState.get('--counter-value'));
 
 // Subscribe to changes
-const unsubscribe = UIState.observe('count', (newValue) => {
-  console.log('Count changed:', newValue);
+const unsubscribe = eventState.on('counter:change', (newValue) => {
+  console.log('Counter changed:', newValue);
 });
 
-// React Hook
-import { useUIState } from '@uistate/core/react';
+// Set state with an attribute
+document.documentElement.dataset.counterValue = count + 1;
+```
 
-function Counter() {
-  const [count, setCount] = useUIState('count', 0);
-  return (
-    <button onClick={() => setCount(count + 1)}>
-      Count: {count}
-    </button>
-  );
+### HTML Usage Example
+
+```html
+<button data-counter-value="0" id="counter-btn">Count: 0</button>
+```
+
+```css
+[data-counter-value] {
+  /* Style based on state */
 }
+```
+
+```javascript
+document.getElementById('counter-btn').addEventListener('click', () => {
+  const btn = document.getElementById('counter-btn');
+  const currentValue = parseInt(btn.dataset.counterValue);
+  btn.dataset.counterValue = currentValue + 1;
+  btn.textContent = `Count: ${currentValue + 1}`;
+  eventState.emit('counter:change', currentValue + 1);
+});
 ```
 
 ## Why @uistate/core?
 
 ### Performance
 
-- **44% Faster Updates**: Leverages browser's CSS engine for optimal performance
-- **12.5% Lower Memory**: Efficient state storage using CSS custom properties
-- **Minimal Overhead**: No virtual DOM diffing for state updates
+- **CSS-Driven Updates**: Leverages browser's CSS engine for optimal performance with O(1) complexity
+- **DOM as Source of Truth**: Efficient state storage using CSS custom properties and data attributes
+- **Minimal Overhead**: No virtual DOM diffing or shadow DOM needed
 
 ### Developer Experience
 
-- **Simple API**: Just `setState`, `getState`, and `observe`
-- **TypeScript Support**: Full type safety and autocompletion
-- **Framework Agnostic**: Works with any framework
+- **Simple API**: Modular `cssState` and `eventState` for clear separation of concerns
+- **Framework Agnostic**: Works with any framework or vanilla JavaScript
 - **Zero Config**: No store setup, no reducers, no actions
+- **CSS-Native**: Leverages the power of CSS selectors and the cascade
 
-## Performance Monitoring
+### Core Concepts
 
-The `@uistate/performance` package provides detailed performance metrics for your application:
-
-```typescript
-import { PerformanceTracker } from '@uistate/performance';
-import { PerformanceDisplay } from '@uistate/performance';
-
-// Start tracking performance
-const tracker = PerformanceTracker.getInstance();
-tracker.start();
-
-// Optional: Add the performance display component to your React app
-function App() {
-  return (
-    <div>
-      <YourApp />
-      <PerformanceDisplay />
-    </div>
-  );
-}
-```
-
-The performance tracker monitors:
-- State update duration
-- Component render time
-- FPS (Frames Per Second)
-- Memory usage
-- Long task duration
+- **Attribute-Driven State Inheritance (ADSI)**: State represented both as CSS variables and data attributes
+- **Hierarchical State Machines**: Model complex UI states with nested state machines
+- **CSS-Driven State Derivation**: Derive complex states using CSS without JavaScript
 
 ## Project Structure
 
 ```
 @uistate/core/
 ├── src/                  # Core library
-│   ├── index.ts         # Main entry
-│   ├── UIState.ts       # Core implementation
-│   └── react/           # React bindings
-│       └── index.ts     # React hooks
-├── packages/
-│   └── performance/     # Performance monitoring package
+│   ├── index.js         # Main entry 
+│   ├── cssState.js      # CSS variables management
+│   ├── eventState.js    # Event-based state transitions
+│   └── templateManager.js # Component management
 └── examples/            # Example applications
-    ├── traditional/     # Traditional Redux app
-    └── uistate/        # UIState implementation
+    ├── basic/          # Simple examples (range sliders, toggles, etc)
+    └── advanced/       # Advanced patterns and techniques
 ```
 
 ## Browser Support
@@ -126,72 +109,65 @@ The performance tracker monitors:
 - Safari 10.1+
 - Edge 79+
 
-# Explanation of the Core Ideas Behind the UI State Management System
+# Core Ideas Behind UIstate
 
-A TypeScript-based UI state management system that leverages CSS custom properties (CSS variables) as the storage mechanism.
+UIstate is a JavaScript-based UI state management system that leverages CSS custom properties and data attributes as the storage mechanism, paired with event-based state transitions.
 
 ## Key Components
 
-### Type Definitions
+### cssState
 
-```typescript
-type StateObserver<T> = (value: T) => void;
-interface UIStateType { ... }
+The `cssState` module provides methods to manage state through CSS custom properties:
+
+```javascript
+// Initialize CSS state management
+cssState.init();
+
+// Set a CSS custom property
+cssState.set('--theme-mode', 'dark');
+
+// Get a CSS custom property value
+const theme = cssState.get('--theme-mode');
 ```
 
-- Defines a type for state change observers (callbacks)
-- Defines the interface for the state management system
+### eventState
 
-## Core Functionality
+The `eventState` module provides an event system for state transitions:
 
-The `UIState` object provides several key methods:
+```javascript
+// Listen for state changes
+eventState.on('theme:change', (newTheme) => {
+  console.log('Theme changed to:', newTheme);
+});
 
-### `init()`
-- Creates a style element in the document head
-- Initializes a CSS stylesheet for managing custom properties
-- Returns the UIState instance for chaining
+// Trigger state changes
+eventState.emit('theme:change', 'light');
 
-### `setState<T>(key: string, value: T)`
-- Stores values as CSS custom properties (--key)
-- Converts non-string values to JSON strings
-- Notifies observers when values change
+// Clean up listeners
+eventState.off('theme:change');
+```
 
-### `getState<T>(key: string)`
-- Retrieves values from CSS custom properties
-- Attempts to parse JSON values back to their original type
-- Falls back to raw string if parsing fails
+### templateManager
 
-### `observe<T>(key: string, callback)`
-- Implements an observer pattern for state changes
-- Returns a cleanup function to remove the observer
-- Allows multiple observers per state key
+The `templateManager` module helps with component initialization and templating:
 
-## Internal Mechanisms
+```javascript
+// Initialize components from templates
+templateManager.init();
 
-```typescript
-_sheet: CSSStyleSheet | null        // Stores the stylesheet reference
-_observers: Map<string, Set<StateObserver>>  // Stores observers per key
+// Create a component from a template
+const button = templateManager.createFromTemplate('button-template');
+document.body.appendChild(button);
 ```
 
 ## Key Features
 
 1. Uses CSS custom properties as a storage mechanism, making state changes automatically trigger UI updates
-2. Provides type safety through TypeScript generics
-3. Implements the observer pattern for reactive updates
-4. Handles serialization/deserialization of complex data types through JSON
+2. Provides a clear separation between state storage (CSS) and behavior (JavaScript)
+3. Implements a pub/sub pattern for reactive updates
+4. Leverages the CSS cascade for hierarchical state inheritance
 
-## Example Usage
-
-```typescript
-UIState.init();
-UIState.setState('theme', 'dark');
-UIState.observe('theme', (newValue) => {
-    console.log('Theme changed to:', newValue);
-});
-const currentTheme = UIState.getState<string>('theme');
-```
-
-This implementation is particularly useful for managing global UI state like themes, layout preferences, or any other state that might affect multiple components simultaneously.
+This implementation is particularly useful for building UI components with clean separation of concerns and optimal performance.
 
 ## Contributing
 
