@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en" style="--card-count: 0; --next-id: 1;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UIstate Card Example (Template Optimized)</title>
+    <link rel="stylesheet" href="card-tpl.css">
+    <link rel="stylesheet" href="range-input-tpl.css">
+    <link rel="stylesheet" href="controls-tpl.css">
+</head>
+<body data-theme="light" data-card-count="0" data-next-id="1">
+    <div class="container mt-4">
+        <h1 class="mb-4">002. UIstate Card Example (Template Optimized)</h1>
+        
+        <div class="bg-light p-3 rounded mb-4 master-controls">
+            <!-- Controls will be rendered here by JavaScript -->
+            <div id="controls-container"></div>
+            <div id="range-slider-container" class="d-block mt-5 mb-3"></div>
+        </div>
+        
+        <div class="empty-state-message text-center p-4 fst-italic text-secondary bg-light rounded mb-3">
+            No cards yet. Click "Add Card" to get started.
+        </div>
+        
+        <div id="card-container" class="d-flex flex-column"></div>
+    </div>  
+    <!-- State Inspector -->
+    <div id="state-inspector" class="state-inspector" data-visible="false">
+        <h4>State Inspector</h4>
+        <pre id="state-content"></pre>
+    </div>
+    
+    <script type="module">
+        import UIstate from '../../packages/core/src/index.js';
+        import createTemplateManager from '../../packages/core/src/templateManager.js';
+        import StateInspector from '../../packages/core/src/stateInspector.js';
+        
+        const uistate = UIstate.init();
+        const templateManager = createTemplateManager(uistate);
+        
+        // Helper: Update state inspector
+        function updateStateInspector() {
+            const stateContent = document.getElementById('state-content');
+            if (!stateContent) return;
+            
+            // Collect state from DOM and UIstate
+            const state = {
+                theme: document.body.getAttribute('data-theme'),
+                cardCount: parseInt(document.body.getAttribute('data-card-count')),
+                nextId: parseInt(document.body.getAttribute('data-next-id')),
+                slider: uistate.getState('slider') || {},
+                cards: {}
+            };
+            
+            // Collect card states
+            document.querySelectorAll('.card[data-exists="true"]').forEach(card => {
+                const id = card.getAttribute('data-card-id');
+                const color = card.getAttribute('data-color');
+                state.cards[id] = { id: parseInt(id), color };
+            });
+            
+            // Update the state display
+            stateContent.textContent = JSON.stringify(state, null, 2);
+        }
+        
+        // Function to create a controls panel
+        function createControlsPanel() {
+            const controlsElement = templateManager.renderTemplateFromCss('controls', {
+                id: 'main-controls'
+            });
+            
+            document.getElementById('controls-container').appendChild(controlsElement);
+            
+            // Update the controls panel with card count
+            updateControlsState();
+        }
+        
+        // Function to update controls state based on card count
+        function updateControlsState() {
+            const cardCount = parseInt(document.body.getAttribute('data-card-count'));
+            const controlsPanel = document.querySelector('.controls-panel');
+            if (controlsPanel) {
+                controlsPanel.setAttribute('data-cards', cardCount);
+            }
+        }
+        
+        // Function to create a card
+        function createCard() {
+            // Get next ID from body attribute
+            const nextId = parseInt(document.body.getAttribute('data-next-id'));
+            const colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            
+            const cardElement = templateManager.renderTemplateFromCss('card', {
+                id: nextId,
+                color: randomColor
+            });
+            
+            document.getElementById('card-container').appendChild(cardElement);
+            
+            // Update body attributes
+            const cardCount = parseInt(document.body.getAttribute('data-card-count')) + 1;
+            document.body.setAttribute('data-card-count', cardCount);
+            document.body.setAttribute('data-next-id', nextId + 1);
+            document.documentElement.style.setProperty('--card-count', cardCount);
+            
+            // Update controls state
+            updateControlsState();
+            
+            // Update state inspector
+            updateStateInspector();
+        }
+        
+        // Function to delete a card
+        function deleteCard(id, e, target) {
+            const cardElement = target.closest('.card');
+            if (cardElement) {
+                cardElement.remove();
+                
+                // Update body attributes
+                const cardCount = parseInt(document.body.getAttribute('data-card-count')) - 1;
+                document.body.setAttribute('data-card-count', cardCount);
+                document.documentElement.style.setProperty('--card-count', cardCount);
+                
+                // Update controls state
+                updateControlsState();
+                
+                // Update state inspector
+                updateStateInspector();
+            }
+        }
+        
+        // Function to delete all cards
+        function deleteAllCards() {
+            document.querySelectorAll('.card[data-exists="true"]').forEach(card => {
+                card.remove();
+            });
+            
+            // Update body attributes
+            document.body.setAttribute('data-card-count', 0);
+            document.documentElement.style.setProperty('--card-count', 0);
+            
+            // Update controls state
+            updateControlsState();
+            
+            // Update state inspector
+            updateStateInspector();
+        }
+        
+        // Function to change card color
+        function changeCardColor(id, e, target) {
+            const cardElement = target.closest('.card');
+            if (!cardElement) return;
+            
+            const colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark'];
+            const currentColor = cardElement.getAttribute('data-color');
+            
+            // Get a new random color different from the current one
+            let newColor;
+            do {
+                newColor = colors[Math.floor(Math.random() * colors.length)];
+            } while (newColor === currentColor);
+            
+            // Update card color
+            cardElement.setAttribute('data-color', newColor);
+            
+            // Update button color
+            target.className = target.className.replace(/btn-\w+/, `btn-${newColor}`);
+            
+            // Update state inspector
+            updateStateInspector();
+        }
+        
+        // Function to change all card colors
+        function randomizeAllColors() {
+            document.querySelectorAll('.card[data-exists="true"]').forEach(card => {
+                const colors = ['primary', 'secondary', 'success', 'danger', 'warning', 'info', 'dark'];
+                const currentColor = card.getAttribute('data-color');
+                
+                // Get a new random color different from the current one
+                let newColor;
+                do {
+                    newColor = colors[Math.floor(Math.random() * colors.length)];
+                } while (newColor === currentColor);
+                
+                // Update card color
+                card.setAttribute('data-color', newColor);
+                
+                // Update button color
+                const button = card.querySelector('.btn-color-action');
+                if (button) {
+                    button.className = button.className.replace(/btn-\w+/, `btn-${newColor}`);
+                }
+            });
+            
+            // Update state inspector
+            updateStateInspector();
+        }
+        
+        // Function to toggle theme
+        function toggleTheme() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            body.setAttribute('data-theme', newTheme);
+            
+            // Update state inspector
+            updateStateInspector();
+        }
+        
+        // Function to toggle state inspector
+        function toggleInspector() {
+            const inspector = document.getElementById('state-inspector');
+            const isVisible = inspector.getAttribute('data-visible') === 'true';
+            
+            inspector.setAttribute('data-visible', isVisible ? 'false' : 'true');
+            
+            // Update the inspector content
+            updateStateInspector();
+        }
+        
+        // Function to create a range slider
+        function createRangeSlider() {
+            const rangeElement = templateManager.renderTemplateFromCss('range', {
+                id: 'fontSize',
+                label: 'Font Size',
+                min: '8',
+                max: '32',
+                step: '1',
+                value: '16',
+                unit: 'px',
+                color: 'primary'
+            });
+            
+            document.getElementById('range-slider-container').appendChild(rangeElement);
+            
+            // Initialize slider state in UIstate
+            uistate.setState('slider.fontSize', 16);
+            uistate.setState('slider.unit', 'px');
+            
+            // Set initial CSS variables
+            document.documentElement.style.setProperty('--card-font-size', '16px');
+            document.documentElement.style.setProperty('--slider-min', 8);
+            document.documentElement.style.setProperty('--slider-max', 32);
+            document.documentElement.style.setProperty('--slider-value', 16);
+            
+            // Update state inspector
+            updateStateInspector();
+        }
+        
+        // Function to update font size based on range slider
+        function updateFontSize(id, e, target) {
+            const value = parseInt(target.value);
+            const unit = 'px';
+            
+            // Update the value display
+            const valueDisplay = target.closest('.range-slider').querySelector('.value-display');
+            if (valueDisplay) {
+                valueDisplay.textContent = `${value}${unit}`;
+            }
+            
+            // Update CSS variables
+            // This is the key change - using CSS variables as the source of truth
+            document.documentElement.style.setProperty('--card-font-size', `${value}${unit}`);
+            document.documentElement.style.setProperty('--slider-value', value);
+            
+            // Update UIstate
+            uistate.setState('slider.fontSize', value);
+            uistate.setState('slider.unit', unit);
+            
+            // Update state inspector
+            updateStateInspector();
+        }
+        
+        // Register actions using the declarative API
+        templateManager.registerActions({
+            'add-card': createCard,
+            'delete-card': { 
+                fn: deleteCard, 
+                extractId: true, 
+                idAttribute: 'cardId' 
+            },
+            'change-color': { 
+                fn: changeCardColor, 
+                extractId: true, 
+                idAttribute: 'cardId' 
+            },
+            'delete-all': deleteAllCards,
+            'random-all': randomizeAllColors,
+            'toggle-theme': toggleTheme,
+            'toggle-inspector': toggleInspector,
+            'update-range': {
+                fn: updateFontSize,
+                extractId: true,
+                idAttribute: 'rangeId'
+            }
+        }).attachDelegation();
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // Create initial components
+            createControlsPanel();
+            createRangeSlider();
+            
+            // Initialize state inspector
+            updateStateInspector();
+        });
+    </script>
+</body>
+</html>

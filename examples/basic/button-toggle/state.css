@@ -1,9 +1,0 @@
-.button-toggle[data-state="inactive"] {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.button-toggle[data-state="active"] {
-  background-color: #4CAF50;
-  color: white;
-}

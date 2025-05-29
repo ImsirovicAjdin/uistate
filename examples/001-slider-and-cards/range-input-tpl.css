@@ -1,0 +1,73 @@
+/* Range slider template and styling */
+:root {
+    /* Range slider template with placeholders for dynamic content */
+    --template-range: '<div class="range-slider mb-3" data-id="{{id}}"><label class="form-label d-flex justify-content-between"><span>{{label}}</span><span class="value-display">{{value}}{{unit}}</span></label><input type="range" class="form-range" id="{{id}}" min="{{min}}" max="{{max}}" step="{{step}}" value="{{value}}" data-action="update-range" data-range-id="{{id}}"><div class="d-flex justify-content-between"><small>{{min}}{{unit}}</small><small>{{max}}{{unit}}</small></div></div>';
+}
+
+/* CSS variables for slider state */
+:root {
+    --slider-min: 8;
+    --slider-max: 32;
+    --slider-value: 16;
+    --slider-position: calc((var(--slider-value) - var(--slider-min)) / (var(--slider-max) - var(--slider-min)) * 100%);
+    --slider-fill: linear-gradient(90deg, var(--bs-primary) var(--slider-position), #dee2e6 var(--slider-position));
+}
+
+/* Custom styling for range input */
+.form-range {
+    height: 1.5rem;
+}
+
+.form-range::-webkit-slider-thumb {
+    background: var(--bs-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.form-range::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+}
+
+.form-range::-webkit-slider-runnable-track {
+    background: var(--slider-fill);
+    height: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/* Firefox support */
+.form-range::-moz-range-thumb {
+    background: var(--bs-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.form-range::-moz-range-thumb:hover {
+    transform: scale(1.2);
+}
+
+.form-range::-moz-range-track {
+    background: var(--slider-fill);
+    height: 0.5rem;
+    border-radius: 0.25rem;
+}
+
+/* State inspector styling */
+.state-inspector {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 400px;
+    min-height: 90vh;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #00ff00;
+    padding: 15px;
+    font-family: monospace;
+    z-index: 1000;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+}
+
+.state-inspector[data-visible="true"] {
+    transform: translateY(0);
+}
