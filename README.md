@@ -2,6 +2,8 @@
 
 A revolutionary approach to UI state management using CSS custom properties and DOM attributes, featuring Attribute-Driven State Inheritance (ADSI).
 
+**Current Version**: 3.1.1
+
 **Author**: Ajdin Imsirovic <ajdika@live.com> (GitHub)  
 **Maintainer**: uistate <ajdika.i@gmail.com> (npm)
 
