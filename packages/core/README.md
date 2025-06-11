@@ -1,9 +1,18 @@
-# @uistate/core v3.0.0
+# @uistate/core v3.1.2
 
 **author**: Ajdin Imsirovic <ajdika@live.com> (GitHub)  
 **maintainer**: uistate <ajdika.i@gmail.com> (npm)
 
 High-performance UI state management using CSS custom properties and ADSI (Attribute-Driven State Inheritance). Focused heavily on DX and performance with a fully declarative approach.
+
+## What's New in v3.1.1
+
+- 🛠️ Added `setStates()` method for batch state updates
+- 🧩 Added `registerSpecialHandler()` and `registerEventBinding()` for extensibility
+- 🏷️ New `setupObservers()` for automatic state-to-DOM binding
+- ⚡ Improved `setupStateActions()` with customizable event handling
+- 💾 Default event handlers for clicks and inputs with declarative binding
+- 🗡️ Enhanced attribute serialization with specialized handlers
 
 ## What's New in v3.0.0
 
@@ -62,7 +71,7 @@ npm install @uistate/core
 │   ├── stateInspector.js  # State inspection tools
 │   └── stateSerializer.js # State serialization
 └── examples/              # Example applications
-    └── 001-slider-and-cards/ # Advanced slider example
+    └── 001-.../ # Progressive examples from simpler to more complex
 ```
 
 ## Browser Support
