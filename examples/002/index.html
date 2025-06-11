@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo 002: Flexible Counter Implementation</title>
+    <link rel="stylesheet" href="state.css">
+    <link rel="stylesheet" href="makeup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>UIstate (v3.1.0)</h1>
+        <h2>Demo 002: Flexible Counter Implementation</h2>
+
+        <div class="counter">Count: <span  data-observe="count">0</span></div>
+
+        <div class="counter-section">
+            <h3>Method 1: Using data-state-value</h3>
+            <button class="btn btn-success" data-state-action="count" data-state-value="1">+1 (data-state-value)</button>
+            <button class="btn btn-primary" data-state-action="count" data-state-value="-1">-1 (data-state-value)</button>
+        </div>
+
+        <div class="counter-section">
+            <h3>Method 2: Using data-state-value</h3>
+            <button class="btn btn-success" data-state-action="count" data-state-value="5">+5 (data-state-value)</button>
+            <button class="btn btn-primary" data-state-action="count" data-state-value="-5">-5 (data-state-value)</button>
+        </div>
+
+        <div class="counter-section" data-component-id="counter-1">
+            <h3>Method 3: Component Clone #1</h3>
+            <input type="number" data-state-for="count" value="10" min="-100" max="100">
+            <button class="btn btn-warning" data-state-action="count" data-state-source="[data-component-id='counter-1'] [data-state-for='count']">Add from clone #1</button>
+        </div>
+
+        <div class="counter-section" data-component-id="counter-2">
+            <h3>Method 4: Component Clone #2</h3>
+            <input type="number" data-state-for="count" value="25" min="-100" max="100">
+            <button class="btn btn-info" data-state-action="count" data-state-source="[data-component-id='counter-2'] [data-state-for='count']">Add from clone #2</button>
+        </div>
+    </div>
+
+    <script type="module" src="implementation.js"></script>
+</body>
+</html>

@@ -1,11 +1,14 @@
 /**
  * StateSerializer - Configurable serialization module for UIstate
  * Handles transformation between JavaScript values and CSS-compatible string values
- * 
+ *
  * Supports multiple serialization strategies:
  * - 'escape': Uses custom escaping for all values (original UIstate approach)
  * - 'json': Uses JSON.stringify for complex objects, direct values for primitives
  * - 'hybrid': Automatically selects the best strategy based on value type
+ *
+ * Also handles serialization of values for data attributes and CSS variables
+ * with consistent rules and unified serialization behavior
  */
 
 // Utility functions for CSS value escaping/unescaping
@@ -21,7 +24,7 @@ function unescapeCssValue(value) {
     if (typeof value !== 'string') return value;
     // Only perform unescaping if there are escape sequences
     if (!value.includes('\\')) return value;
-    
+
     return value.replace(/\\([0-9a-f]{1,6})\s?/gi, function(match, hex) {
         return String.fromCharCode(parseInt(hex, 16));
     });
@@ -40,15 +43,15 @@ function createSerializer(config = {}) {
         complexThreshold: 3,   // Object properties threshold for hybrid mode
         preserveTypes: true    // Preserve type information in serialization
     };
-    
+
     // Merge provided config with defaults
     const options = { ...defaultConfig, ...config };
-    
+
     // Serializer instance
     const serializer = {
         // Current configuration
         config: options,
-        
+
         /**
          * Update configuration
          * @param {Object} newConfig - New configuration options
@@ -59,7 +62,7 @@ function createSerializer(config = {}) {
                 console.log('StateSerializer config updated:', this.config);
             }
         },
-        
+
         /**
          * Serialize a value for storage in CSS variables
          * @param {string} key - The state key (for context-aware serialization)
@@ -71,14 +74,14 @@ function createSerializer(config = {}) {
             if (value === null || value === undefined) {
                 return '';
             }
-            
+
             const valueType = typeof value;
-            const isComplex = valueType === 'object' && 
-                             (Array.isArray(value) || 
+            const isComplex = valueType === 'object' &&
+                             (Array.isArray(value) ||
                               (Object.keys(value).length >= this.config.complexThreshold));
-            
+
             // Select serialization strategy based on configuration and value type
-            if (this.config.mode === 'escape' || 
+            if (this.config.mode === 'escape' ||
                 (this.config.mode === 'hybrid' && !isComplex)) {
                 // Use escape strategy for primitives or when escape mode is forced
                 if (valueType === 'string') {
@@ -96,7 +99,7 @@ function createSerializer(config = {}) {
                 return JSON.stringify(value);
             }
         },
-        
+
         /**
          * Deserialize a value from CSS variable storage
          * @param {string} key - The state key (for context-aware deserialization)
@@ -106,10 +109,10 @@ function createSerializer(config = {}) {
         deserialize(key, value) {
             // Handle empty values
             if (!value) return '';
-            
+
             // Try JSON parse first for values that look like JSON
-            if (this.config.mode !== 'escape' && 
-                ((value.startsWith('{') && value.endsWith('}')) || 
+            if (this.config.mode !== 'escape' &&
+                ((value.startsWith('{') && value.endsWith('}')) ||
                  (value.startsWith('[') && value.endsWith(']')))) {
                 try {
                     return JSON.parse(value);
@@ -120,13 +123,13 @@ function createSerializer(config = {}) {
                     // Fall through to unescaping if JSON parse fails
                 }
             }
-            
+
             // For non-JSON or escape mode, try unescaping
             const unescaped = unescapeCssValue(value);
-            
+
             // If unescaped looks like JSON (might have been double-escaped), try parsing it
             if (this.config.mode !== 'escape' &&
-                ((unescaped.startsWith('{') && unescaped.endsWith('}')) || 
+                ((unescaped.startsWith('{') && unescaped.endsWith('}')) ||
                  (unescaped.startsWith('[') && unescaped.endsWith(']')))) {
                 try {
                     return JSON.parse(unescaped);
@@ -134,10 +137,70 @@ function createSerializer(config = {}) {
                     // Not valid JSON, return unescaped string
                 }
             }
-            
+
             return unescaped;
         },
-        
+
+        /**
+         * Serialize a value for data-* attribute
+         * @param {string} key - The state key
+         * @param {any} value - The value to serialize for attribute
+         * @returns {string} - Serialized attribute value
+         */
+        serializeForAttribute(key, value) {
+            if (value === null || value === undefined) return null;
+
+            // For objects, use the standard serializer
+            if (typeof value === 'object') {
+                return this.serialize(key, value);
+            }
+
+            // For primitive values, use direct string conversion
+            return String(value);
+        },
+
+        /**
+         * Apply serialized state to HTML element attributes and properties
+         * @param {string} key - State key
+         * @param {any} value - Value to apply
+         * @param {HTMLElement} element - Target element (defaults to documentElement)
+         */
+        applyToAttributes(key, value, element = document.documentElement) {
+            // Skip null/undefined values
+            if (value === null || value === undefined) {
+                element.removeAttribute(`data-${key}`);
+                return;
+            }
+
+            // Handle objects specially
+            if (typeof value === 'object') {
+                // Set the main attribute with serialized value
+                element.setAttribute(`data-${key}`, this.serialize(key, value));
+
+                // For non-array objects, set individual property attributes
+                if (!Array.isArray(value)) {
+                    Object.entries(value).forEach(([propKey, propValue]) => {
+                        const attributeKey = `data-${key}-${propKey.toLowerCase()}`;
+                        if (propValue !== null && propValue !== undefined) {
+                            if (typeof propValue === 'object') {
+                                element.setAttribute(
+                                    attributeKey,
+                                    this.serialize(`${key}.${propKey}`, propValue)
+                                );
+                            } else {
+                                element.setAttribute(attributeKey, propValue);
+                            }
+                        } else {
+                            element.removeAttribute(attributeKey);
+                        }
+                    });
+                }
+            } else {
+                // For primitives, set directly
+                element.setAttribute(`data-${key}`, value);
+            }
+        },
+
         /**
          * Utility method to determine if a value needs complex serialization
          * @param {any} value - Value to check
@@ -146,7 +209,7 @@ function createSerializer(config = {}) {
         needsComplexSerialization(value) {
             return typeof value === 'object' && value !== null;
         },
-        
+
         /**
          * Set state with proper serialization for CSS variables
          * @param {Object} uistate - UIstate instance
@@ -157,23 +220,23 @@ function createSerializer(config = {}) {
         setStateWithCss(uistate, path, value) {
             // Update UIstate
             uistate.setState(path, value);
-            
+
             // Update CSS variable with properly serialized value
             const cssPath = path.replace(/\./g, '-');
             const serialized = this.serialize(path, value);
             document.documentElement.style.setProperty(`--${cssPath}`, serialized);
-            
+
             // Update data attribute for root level state
             const segments = path.split('.');
             if (segments.length === 1) {
-                document.documentElement.dataset[path] = typeof value === 'object' 
-                    ? JSON.stringify(value) 
+                document.documentElement.dataset[path] = typeof value === 'object'
+                    ? JSON.stringify(value)
                     : value;
             }
-            
+
             return value;
         },
-        
+
         /**
          * Get state with fallback to CSS variables
          * @param {Object} uistate - UIstate instance
@@ -184,16 +247,16 @@ function createSerializer(config = {}) {
             // First try UIstate
             const value = uistate.getState(path);
             if (value !== undefined) return value;
-            
+
             // If not found, try CSS variable
             const cssPath = path.replace(/\./g, '-');
             const cssValue = getComputedStyle(document.documentElement)
                 .getPropertyValue(`--${cssPath}`).trim();
-                
+
             return cssValue ? this.deserialize(path, cssValue) : undefined;
         }
     };
-    
+
     return serializer;
 }
 

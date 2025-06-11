@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo 001: Button Counter</title>
+    <link rel="stylesheet" href="state.css">
+    <link rel="stylesheet" href="makeup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>UIstate (v3.1.0)</h1>
+        <h2>Demo 001: Button Counter</h2>
+
+        <div>
+            <div class="counter">Count: <span id="countDisplay" data-observe="count">0</span></div>
+            <button class="btn btn-success" id="incrementBtn" data-state-action="count" data-state-increment="1">Increment</button>
+            <button class="btn btn-primary" id="decrementBtn" data-state-action="count" data-state-increment="-1">Decrement</button>
+        </div>
+    </div>
+
+    <script type="module" src="implementation.js"></script>
+</body>
+</html>

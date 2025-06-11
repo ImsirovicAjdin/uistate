@@ -23,12 +23,12 @@ const createEventState = (initial = {}) => {
             return path
                 .split(".")
                 .reduce(
-                    (obj, prop) => 
+                    (obj, prop) =>
                         obj && obj[prop] !== undefined ? obj[prop] : undefined,
                     store
                 );
         },
-        
+
         // set a value in the store by path
         set: (path, value) => {
             if(!path) return;
@@ -84,10 +84,10 @@ const createEventState = (initial = {}) => {
 
             return () => bus.removeEventListener(path, handler);
         },
-        
+
         // Optional method to clean up resources
         destroy: () => {
-            if (bus.parentNode) { 
+            if (bus.parentNode) {
                 bus.parentNode.removeChild(bus);
             }
         },

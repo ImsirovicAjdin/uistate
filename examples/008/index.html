@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo 008: Theme Switcher with Selector-Based Components</title>
+    <link rel="stylesheet" href="state.css">
+    <link rel="stylesheet" href="makeup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>UIstate (v3.1.0) Selector-Based Components</h1>
+        <h2>Demo 008: Theme Switcher</h2>
+
+        <div class="theme-display">
+            Current Theme: <span data-observe="theme" data-observe-handler="theme-observer">light</span>
+        </div>
+
+        <div class="theme-section">
+            <h3>Method 1: Direct Value Setting</h3>
+            <button data-state-action="theme" data-state-value="light">Light Theme</button>
+            <button data-state-action="theme" data-state-value="dark">Dark Theme</button>
+        </div>
+
+        <div class="theme-section" data-component-id="preset-theme">
+            <h3>Method 2: Select-Based Theming</h3>
+            <select data-state-for="theme">
+                <option value="forest">Forest Theme</option>
+                <option value="ocean">Ocean Theme</option>
+                <option value="desert">Desert Theme</option>
+            </select>
+            <button
+                data-state-action="theme"
+                data-state-source="[data-component-id='preset-theme'] [data-state-for='theme']"
+            >
+                Apply Preset
+            </button>
+        </div>
+
+        <div class="theme-section" data-component-id="custom-theme">
+            <h3>Method 3: Color Picker</h3>
+            <input type="color" data-state-for="theme-color" value="#336699">
+            <button
+                data-state-action="theme"
+                data-state-source="[data-component-id='custom-theme'] [data-state-for='theme-color']"
+            >
+                Apply Custom Color
+            </button>
+        </div>
+    </div>
+
+    <script type="module" src="implementation.js"></script>
+</body>
+</html>

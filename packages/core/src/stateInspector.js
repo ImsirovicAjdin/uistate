@@ -1,9 +1,9 @@
 /**
  * StateInspector - Real-time state inspection panel for UIstate
- * 
+ *
  * This module provides a configurable UI panel that displays and allows manipulation
  * of CSS variables and state values in UIstate applications.
- * 
+ *
  * Features:
  * - Toggle visibility with a dedicated button
  * - Real-time updates of CSS variable values
@@ -28,10 +28,10 @@ function createStateInspector(config = {}) {
         stateManager: null, // Optional reference to UIstate or CssState instance
         theme: 'light'
     };
-    
+
     // Merge provided config with defaults
     const options = { ...defaultConfig, ...config };
-    
+
     // Private state
     let isVisible = options.initiallyVisible;
     let panel = null;
@@ -39,12 +39,12 @@ function createStateInspector(config = {}) {
     let filterInput = null;
     let stateContainer = null;
     let currentFilter = '';
-    
+
     // StateInspector instance
     const inspector = {
         // Current configuration
         config: options,
-        
+
         /**
          * Update configuration
          * @param {Object} newConfig - New configuration options
@@ -53,7 +53,7 @@ function createStateInspector(config = {}) {
             Object.assign(this.config, newConfig);
             this.refresh();
         },
-        
+
         /**
          * Attach the inspector panel to the target element
          * @param {Element} element - Target element to attach to (defaults to config.target)
@@ -65,7 +65,7 @@ function createStateInspector(config = {}) {
             console.log('StateInspector: Panel would be attached to', element);
             return this;
         },
-        
+
         /**
          * Show the inspector panel
          * @returns {Object} - The inspector instance for chaining
@@ -75,7 +75,7 @@ function createStateInspector(config = {}) {
             if (panel) panel.style.display = 'block';
             return this;
         },
-        
+
         /**
          * Hide the inspector panel
          * @returns {Object} - The inspector instance for chaining
@@ -85,7 +85,7 @@ function createStateInspector(config = {}) {
             if (panel) panel.style.display = 'none';
             return this;
         },
-        
+
         /**
          * Toggle the visibility of the inspector panel
          * @returns {Object} - The inspector instance for chaining
@@ -93,7 +93,7 @@ function createStateInspector(config = {}) {
         toggle() {
             return isVisible ? this.hide() : this.show();
         },
-        
+
         /**
          * Refresh the state display
          * @returns {Object} - The inspector instance for chaining
@@ -104,7 +104,7 @@ function createStateInspector(config = {}) {
             console.log('StateInspector: State display would be refreshed');
             return this;
         },
-        
+
         /**
          * Filter the displayed state variables
          * @param {string} filterText - Text to filter by
@@ -115,7 +115,7 @@ function createStateInspector(config = {}) {
             // Implementation will filter the displayed variables
             return this.refresh();
         },
-        
+
         /**
          * Clean up resources used by the inspector
          */
@@ -129,7 +129,7 @@ function createStateInspector(config = {}) {
             stateContainer = null;
         }
     };
-    
+
     return inspector;
 }
 

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo 003: Input value projection on click</title>
+    <link rel="stylesheet" href="state.css">
+    <link rel="stylesheet" href="makeup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>UIstate (v3.1.0)</h1>
+        <h2>Demo 003: Input value projection on click</h2>
+
+        The code demonstrates:
+        <ul>
+            <li>An input field is marked with <code>data-state-for="input"</code></li>
+            <ul>
+                A button, when clicked, will:
+                <li>
+                    Execute the action handler specified by <code>data-state-action="thisStateActionIsHandlerInRSH"</code>
+                </li>
+                <li>
+                    Take the value from the source element (the input) specified by <code>data-state-source="[data-state-for='input']"</code>
+                </li>
+                <li>
+                    Update the state variable <code>actualValueOfInput</code> specified by <code>data-state-target</code>
+                </li>
+                <li>
+                    The span element with <code>data-observe="actualValueOfInput"</code> specified by <code>data-state-target</code>.
+                </li>
+            </ul>
+        </ul>
+
+        <div class="you-typed">
+            You typed: <span  data-observe="actualValueOfInput"></span>
+        </div>
+
+        <div class="counter-section">
+            <input
+                type="text"
+                data-state-for="input"
+                placeholder="Type something..."
+            >
+            <button
+                class="btn"
+                data-state-action="thisStateActionIsHandlerInRSH"
+                data-state-source="[data-state-for='input']"
+                data-state-target="actualValueOfInput"
+            >
+                Update Text
+            </button>
+        </div>
+    </div>
+
+    <script type="module" src="implementation.js"></script>
+</body>
+</html>
