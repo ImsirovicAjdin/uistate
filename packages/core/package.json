@@ -1,6 +1,6 @@
 {
   "name": "@uistate/core",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "type": "module",
   "description": "High-performance UI state management using CSS custom properties and ADSI (Attribute-Driven State Inheritance)",
   "main": "src/index.js",
