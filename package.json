@@ -1,7 +1,7 @@
 {
   "name": "uistate",
-  "version": "4.0.3",
-  "description": "Zero dependency, modular state management for web applications",
+  "version": "4.1.0",
+  "description": "Revolutionary DOM-based state management using CSS custom properties - zero dependencies, potential O(1) updates",
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -25,13 +25,10 @@
     "zero-dependency",
     "modular"
   ],
-  "author": "Your Name",
+  "author": "Ajdin Imsirovic",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "your-repo-url"
-  },
-  "devDependencies": {
-    "@lerna/cli": "^6.4.1"
+    "url": "https://github.com/ImsirovicAjdin/uistate"
   }
 }

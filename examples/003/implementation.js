@@ -1,4 +1,4 @@
-import UIstate from '../../packages/core/src/cssState.js';
+import UIstate from '../../cssState.js';
 
 UIstate.registerSpecialHandler('thisStateActionIsHandlerInRSH', {
     action: target => {

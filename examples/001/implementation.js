@@ -6,7 +6,7 @@
 (4) - Set up DOM-based state observations and actions
 */
 
-import UIstate from '../../packages/core/src/cssState.js';
+import UIstate from '../../cssState.js';
 
 // (1)
 UIstate.registerSpecialHandler('count', {

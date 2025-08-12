@@ -1,4 +1,4 @@
-import UIstate from '../../packages/core/src/cssState.js';
+import UIstate from '../../cssState.js';
 
 // Enhanced declarative input handler with transformations and event support
 UIstate.registerSpecialHandler('stateInput', {
