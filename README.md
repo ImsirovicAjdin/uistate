@@ -2,7 +2,7 @@
 
 A revolutionary approach to UI state management using CSS custom properties and DOM attributes, featuring Attribute-Driven State Inheritance (ADSI).
 
-**Current Version**: 4.1.1
+**Current Version**: 4.1.2
 
 **Author**: Ajdin Imsirovic <ajdika@live.com> (GitHub)  
 **Maintainer**: uistate <ajdika.i@gmail.com> (npm)
@@ -15,7 +15,7 @@ npm install @uistate/core
 
 ## Quick Start
 
-UIstate v4.1.1 provides four core modules that can be imported individually:
+UIstate v4.1.2 provides four core modules that can be imported individually:
 
 ```javascript
 import { createCssState, createEventState, stateSerializer, createTemplateManager } from '@uistate/core';
