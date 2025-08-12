@@ -1,15 +1,37 @@
 {
-  "name": "uistate-monorepo",
-  "private": true,
-  "workspaces": [
-    "packages/*"
+  "name": "uistate",
+  "version": "4.0.3",
+  "description": "Zero dependency, modular state management for web applications",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./cssState": "./cssState.js",
+    "./eventState": "./eventState.js",
+    "./stateSerializer": "./stateSerializer.js",
+    "./templateManager": "./templateManager.js"
+  },
+  "files": [
+    "index.js",
+    "cssState.js",
+    "eventState.js", 
+    "stateSerializer.js",
+    "templateManager.js"
   ],
-  "scripts": {
-    "build": "lerna run build",
-    "test": "lerna run test",
-    "lint": "lerna run lint"
+  "keywords": [
+    "state-management",
+    "css-variables",
+    "dom-events",
+    "zero-dependency",
+    "modular"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "your-repo-url"
   },
   "devDependencies": {
-    "lerna": "^4.0.0"
+    "@lerna/cli": "^6.4.1"
   }
 }
