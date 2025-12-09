@@ -6,6 +6,7 @@ const createEventState = (initial = {}) => {
 
     return {
         get: (path) => {
+            if (destroyed) throw new Error('Cannot get from destroyed store');
             if (!path) return store;
 
             // Parse dot-paths: 'items.0' → ['items', '0']
@@ -20,6 +21,7 @@ const createEventState = (initial = {}) => {
             );
         },
         set: (path, value) => {
+            if (destroyed) throw new Error('Cannot set on destroyed store');
             if (!path) return;
             const parts = path.split('.');
             const last = parts.pop();
@@ -72,10 +74,11 @@ const createEventState = (initial = {}) => {
 
         destroy() {
             if (!destroyed) {
-              if (bus.parentNode) bus.parentNode.removeChild(bus);
-              destroyed = true;
+                destroyed = true;
+                // EventTarget has no parentNode - just mark as destroyed
+                // Future sets/subscribes will be blocked by destroyed flag
             }
-          }
+        }
     };
 }
 
