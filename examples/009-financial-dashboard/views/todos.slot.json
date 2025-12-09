@@ -1,0 +1,10 @@
+{
+  "state": {
+    "ui": { "title": "Financial Dashboard: Todos" }
+  },
+  "component": "../components/TodoList.html",
+  "bindings": {
+    "items": "domain.todos.items",
+    "filter": "ui.todos.filter"
+  }
+}

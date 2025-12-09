@@ -5,11 +5,9 @@ node_modules/
 .vscode/
 .idea/
 
-# Documentation
-/docs/
-
-# Examples
-/examples/
+# Examples (keep these - they're valuable)
+# Commented out so examples ship with package
+# /examples/
 
 # Scripts and development tools
 /scripts/
@@ -27,12 +25,15 @@ lerna.json
 .babelrc
 .editorconfig
 
-# Other packages in monorepo (only core package should be published)
-/packages/hsm/
-/packages/observer/
-/packages/performance/
+# Backup files
+*.backup
+*.bak
+*~
 
 # Misc
 *.log
 .DS_Store
 Thumbs.db
+
+examples/011/*
+

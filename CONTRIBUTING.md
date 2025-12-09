@@ -4,20 +4,20 @@
 
 **@uistate/core is currently not accepting external contributions.**
 
-This project represents a novel approach to DOM-based state management using CSS custom properties. As the creator, I'm maintaining tight control over the architecture and implementation to ensure the revolutionary concepts remain coherent and focused.
+This project represents a focused approach to event-driven state management. I'm maintaining tight control over the architecture and implementation to keep the library lean, coherent, and production-ready.
 
 ## How You Can Help
 
 While I'm not accepting code contributions, you can still support the project:
 
 - **Report bugs** via GitHub issues
-- **Share your experience** using UIstate in your projects  
-- **Spread the word** about DOM-based state management
+- **Share your experience** using UIstate in your projects
+- **Spread the word** about path-based reactive state
 - **Provide feedback** on the API and documentation
 
 ## Future Contributions
 
-This policy may evolve as the project matures and the core concepts become more established in the community.
+This policy may evolve as the project matures.
 
 ## Questions?
 
@@ -25,4 +25,4 @@ Feel free to open an issue for questions about usage or to report bugs.
 
 ---
 
-*UIstate is a curated project focused on advancing web state management through revolutionary DOM-based approaches.*
+*UIstate is a curated project focused on practical state management patterns for modern web applications.*

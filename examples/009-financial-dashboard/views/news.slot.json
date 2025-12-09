@@ -1,0 +1,5 @@
+{
+  "state": { "ui": { "title": "Financial Dashboard: News" } },
+  "component": "../components/News.html",
+  "bindings": { "items": "finance.news.items" }
+}

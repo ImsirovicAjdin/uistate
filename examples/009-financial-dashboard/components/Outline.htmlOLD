@@ -1,0 +1,10 @@
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Outline</h5>
+    <div class="input-group mb-3">
+      <input id="newNode" class="form-control" placeholder="Add node" />
+      <button id="addNode" class="btn btn-primary">Add</button>
+    </div>
+    <ul id="outline" class="list-group"></ul>
+  </div>
+</div>

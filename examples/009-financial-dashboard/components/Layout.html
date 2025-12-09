@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-3">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#"><span data-bind="title">App</span></a>
+    <div class="ms-auto d-flex gap-2">
+      <button id="viewTodos" class="btn btn-sm btn-outline-primary">Todos</button>
+      <button id="viewDebts" class="btn btn-sm btn-outline-primary">Debts</button>
+      <button id="viewOutline" class="btn btn-sm btn-outline-secondary">Sales</button>
+      <button id="toggleInspector" class="btn btn-sm btn-outline-info">Inspector</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Persistent wrapper: multi-slot dashboard grid -->
+<div class="container-fluid">
+  <div class="row g-3">
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card">
+        <div class="card-header">KPI</div>
+        <div class="card-body" data-slot="kpi"></div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card">
+        <div class="card-header">Positions</div>
+        <div class="card-body" data-slot="positions"></div>
+      </div>
+    </div>
+    <div class="col-12 col-md-12 col-lg-4">
+      <div class="card">
+        <div class="card-header">News</div>
+        <div class="card-body" data-slot="news"></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,6 @@
+<table class="table table-sm">
+  <thead>
+    <tr><th>Ticker</th><th>Qty</th><th>Price</th></tr>
+  </thead>
+  <tbody></tbody>
+</table>

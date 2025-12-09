@@ -61,10 +61,10 @@ You can also trigger the workflow manually:
 
 ## Security Benefits
 
-✅ **No tokens to manage** - OIDC uses temporary credentials  
-✅ **Provenance attestation** - Cryptographic proof of origin  
-✅ **Audit trail** - Full transparency via GitHub Actions logs  
-✅ **Maximum security** - Only GitHub Actions can publish  
+✅ **No tokens to manage** - OIDC uses temporary credentials
+✅ **Provenance attestation** - Cryptographic proof of origin
+✅ **Audit trail** - Full transparency via GitHub Actions logs
+✅ **Maximum security** - Only GitHub Actions can publish
 
 ## Troubleshooting
 

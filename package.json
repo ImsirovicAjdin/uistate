@@ -1,29 +1,38 @@
 {
   "name": "@uistate/core",
-  "version": "4.1.2",
-  "description": "Revolutionary DOM-based state management using CSS custom properties - zero dependencies, potential O(1) updates",
+  "version": "5.0.0",
+  "description": "Lightweight event-driven state management with slot orchestration and experimental event-sequence testing (eventTest.js available under dual license)",
   "type": "module",
   "main": "index.js",
   "exports": {
     ".": "./index.js",
-    "./cssState": "./cssState.js",
     "./eventState": "./eventState.js",
+    "./cssState": "./cssState.js",
     "./stateSerializer": "./stateSerializer.js",
     "./templateManager": "./templateManager.js"
   },
   "files": [
     "index.js",
+    "eventState.js",
     "cssState.js",
-    "eventState.js", 
     "stateSerializer.js",
-    "templateManager.js"
+    "templateManager.js",
+    "eventTest.js",
+    "LICENSE",
+    "LICENSE-eventTest.md",
+    "examples/"
   ],
   "keywords": [
     "state-management",
-    "css-variables",
+    "event-driven",
+    "reactive",
     "dom-events",
+    "slot-orchestration",
     "zero-dependency",
-    "modular"
+    "framework-free",
+    "micro-framework",
+    "testing",
+    "event-testing"
   ],
   "author": "Ajdin Imsirovic",
   "license": "MIT",
