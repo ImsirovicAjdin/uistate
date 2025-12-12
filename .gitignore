@@ -51,4 +51,7 @@ Thumbs.db
 # Personal setup notes (local only)
 SETUP-COMPLETE.md
 
+# Private/unpublished work
+_noPublish/
+
 examples/011/*

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>005 Conditional Rendering - EventState</title>
+</head>
+<body>
+  <h1>Conditional Rendering</h1>
+  
+  <label>
+    <input type="checkbox" id="toggle">
+    Show secret message
+  </label>
+  
+  <p id="message" style="display: none;">🎉 You found the secret message!</p>
+
+  <script type="module">
+    import { createEventState } from './eventState.js';
+
+    // Create store
+    const store = createEventState({ isVisible: false });
+
+    // Subscribe to visibility changes
+    store.subscribe('isVisible', (value) => {
+      const message = document.getElementById('message');
+      message.style.display = value ? 'block' : 'none';
+    });
+
+    // Toggle on checkbox change
+    document.getElementById('toggle').onchange = (e) => {
+      store.set('isVisible', e.target.checked);
+    };
+  </script>
+</body>
+</html>

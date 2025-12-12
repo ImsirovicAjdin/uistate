@@ -1,30 +1,10 @@
 /**
- * eventTest.js - Event-Sequence Testing for UIstate
- * 
- * Copyright (c) 2025 Ajdin Imsirovic
- * 
- * This file is licensed under a PROPRIETARY LICENSE.
- * 
- * Permission is hereby granted to USE this software for:
- * - Personal projects
- * - Open-source projects
- * - Educational purposes
- * 
- * RESTRICTIONS:
- * - Commercial use requires a separate license (contact: your@email.com)
- * - Modification and redistribution of this file are NOT permitted
- * - This file may not be included in derivative works without permission
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.
- * 
- * For commercial licensing inquiries: your@email.com
- * 
  * eventTest.js - Event-Sequence Testing for EventState
  * 
  * Provides TDD-style testing with type extraction capabilities
  */
 
-import { createEventState } from './eventState.js';
+import { createEventState } from '../runtime/core/eventState.js';
 
 export function createEventTest(initialState = {}) {
   const store = createEventState(initialState);

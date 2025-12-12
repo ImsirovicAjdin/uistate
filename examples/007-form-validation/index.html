@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>007 Form Validation - EventState</title>
+</head>
+<body>
+  <h1>Sign Up Form</h1>
+  
+  <label>
+    Email:
+    <input type="email" id="email" placeholder="you@example.com">
+  </label>
+  <p id="emailError" style="color: red;"></p>
+  
+  <label>
+    Password:
+    <input type="password" id="password" placeholder="Min 8 characters">
+  </label>
+  <p id="passwordError" style="color: red;"></p>
+  
+  <button id="submitBtn" disabled>Submit</button>
+  <p id="submitMessage" style="color: green;"></p>
+
+  <script type="module">
+    import { createEventState } from './eventState.js';
+
+    // Create store
+    const store = createEventState({ 
+      email: '',
+      password: '',
+      emailValid: false,
+      passwordValid: false
+    });
+
+    // Validate email
+    const validateEmail = (email) => {
+      return email.includes('@') && email.includes('.');
+    };
+
+    // Validate password
+    const validatePassword = (password) => {
+      return password.length >= 8;
+    };
+
+    // Update submit button state
+    const updateSubmitButton = () => {
+      const emailValid = store.get('emailValid');
+      const passwordValid = store.get('passwordValid');
+      document.getElementById('submitBtn').disabled = !(emailValid && passwordValid);
+    };
+
+    // Subscribe to email changes
+    store.subscribe('email', (value) => {
+      const isValid = validateEmail(value);
+      store.set('emailValid', isValid);
+      
+      const error = document.getElementById('emailError');
+      error.textContent = value && !isValid ? 'Invalid email address' : '';
+    });
+
+    // Subscribe to password changes
+    store.subscribe('password', (value) => {
+      const isValid = validatePassword(value);
+      store.set('passwordValid', isValid);
+      
+      const error = document.getElementById('passwordError');
+      error.textContent = value && !isValid ? 'Password must be at least 8 characters' : '';
+    });
+
+    // Subscribe to validation state changes
+    store.subscribe('emailValid', updateSubmitButton);
+    store.subscribe('passwordValid', updateSubmitButton);
+
+    // Wire up inputs
+    document.getElementById('email').oninput = (e) => {
+      store.set('email', e.target.value);
+    };
+
+    document.getElementById('password').oninput = (e) => {
+      store.set('password', e.target.value);
+    };
+
+    // Handle submit
+    document.getElementById('submitBtn').onclick = () => {
+      const email = store.get('email');
+      const message = document.getElementById('submitMessage');
+      message.textContent = `✓ Form submitted for ${email}`;
+      
+      // Clear form
+      document.getElementById('email').value = '';
+      document.getElementById('password').value = '';
+      store.set('email', '');
+      store.set('password', '');
+    };
+  </script>
+</body>
+</html>

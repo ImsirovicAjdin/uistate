@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>011 Async Patterns - EventState</title>
+</head>
+<body>
+  <h1>Async Patterns</h1>
+  
+  <h2>Debounced Search</h2>
+  <input type="text" id="searchInput" placeholder="Type to search...">
+  <p id="searchStatus"></p>
+  <p><strong>Search result:</strong> <span id="searchResult">(type something)</span></p>
+  
+  <hr>
+  
+  <h2>Simulated API Call</h2>
+  <button id="fetchBtn">Fetch Data</button>
+  <p id="loadingStatus"></p>
+  <p><strong>Data:</strong> <span id="apiData">(not loaded)</span></p>
+
+  <script type="module">
+    import { createEventState } from './eventState.js';
+
+    // Create store
+    const store = createEventState({ 
+      searchQuery: '',
+      searchResult: '',
+      isSearching: false,
+      apiData: null,
+      isLoading: false
+    });
+
+    // ===== DEBOUNCED SEARCH =====
+    let searchTimeout = null;
+
+    // Simulate search function
+    const performSearch = (query) => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(`Results for "${query}": Found ${query.length} items`);
+        }, 500);
+      });
+    };
+
+    // Subscribe to search query changes
+    store.subscribe('searchQuery', async (value) => {
+      // Clear previous timeout
+      clearTimeout(searchTimeout);
+      
+      if (!value) {
+        store.set('searchResult', '');
+        store.set('isSearching', false);
+        return;
+      }
+      
+      // Show searching indicator
+      store.set('isSearching', true);
+      
+      // Debounce: wait 300ms before searching
+      searchTimeout = setTimeout(async () => {
+        const result = await performSearch(value);
+        store.set('searchResult', result);
+        store.set('isSearching', false);
+      }, 300);
+    });
+
+    // Update UI for search status
+    store.subscribe('isSearching', (value) => {
+      document.getElementById('searchStatus').textContent = 
+        value ? '🔍 Searching...' : '';
+    });
+
+    store.subscribe('searchResult', (value) => {
+      document.getElementById('searchResult').textContent = 
+        value || '(type something)';
+    });
+
+    // Wire up search input
+    document.getElementById('searchInput').oninput = (e) => {
+      store.set('searchQuery', e.target.value);
+    };
+
+    // ===== SIMULATED API CALL =====
+    
+    // Simulate API fetch
+    const fetchData = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve({ 
+            id: Math.floor(Math.random() * 1000),
+            timestamp: new Date().toLocaleTimeString()
+          });
+        }, 1000);
+      });
+    };
+
+    // Subscribe to loading state
+    store.subscribe('isLoading', (value) => {
+      document.getElementById('loadingStatus').textContent = 
+        value ? '⏳ Loading...' : '';
+      document.getElementById('fetchBtn').disabled = value;
+    });
+
+    // Subscribe to API data
+    store.subscribe('apiData', (value) => {
+      if (value) {
+        document.getElementById('apiData').textContent = 
+          `ID: ${value.id}, Time: ${value.timestamp}`;
+      }
+    });
+
+    // Fetch button
+    document.getElementById('fetchBtn').onclick = async () => {
+      store.set('isLoading', true);
+      
+      try {
+        const data = await fetchData();
+        store.set('apiData', data);
+      } catch (error) {
+        console.error('Fetch failed:', error);
+      } finally {
+        store.set('isLoading', false);
+      }
+    };
+  </script>
+</body>
+</html>

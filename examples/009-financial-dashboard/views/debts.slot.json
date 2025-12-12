@@ -1,5 +1,0 @@
-{
-  "state": { "ui": { "title": "Financial Dashboard: Debts" } },
-  "component": "../components/Debts.html",
-  "bindings": { "items": "finance.debts.items" }
-}

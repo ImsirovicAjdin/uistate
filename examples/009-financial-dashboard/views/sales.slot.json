@@ -1,5 +1,0 @@
-{
-  "state": { "ui": { "title": "Financial Dashboard: Sales" } },
-  "component": "../components/Sales.html",
-  "bindings": { "items": "finance.sales.items" }
-}
