@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>002 Counter Improved - EventState</title>
+  <script type="importmap">
+    { "imports": { "@uistate/core": "../../index.js" } }
+  </script>
 </head>
 <body>
   <h1>Counter: <span id="count">0</span></h1>
@@ -12,7 +15,7 @@
   <button id="double">x2</button>
 
   <script type="module">
-    import { createEventState } from './eventState.js';
+    import { createEventState } from '@uistate/core';
 
     // Create store
     const store = createEventState({ count: 0 });

@@ -4,20 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>009 localStorage Side Effects - EventState</title>
+  <script type="importmap">
+    { "imports": { "@uistate/core": "../../index.js" } }
+  </script>
 </head>
 <body>
   <h1>Persistent Counter</h1>
-  
+
   <h2>Count: <span id="count">0</span></h2>
-  
+
   <button id="increment">+1</button>
   <button id="decrement">-1</button>
   <button id="reset">Reset</button>
-  
+
   <p><small>Reload the page - your count persists!</small></p>
 
   <script type="module">
-    import { createEventState } from './eventState.js';
+    import { createEventState } from '@uistate/core';
 
     const STORAGE_KEY = 'eventstate-counter';
 

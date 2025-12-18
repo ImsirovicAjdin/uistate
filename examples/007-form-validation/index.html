@@ -4,30 +4,33 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>007 Form Validation - EventState</title>
+  <script type="importmap">
+    { "imports": { "@uistate/core": "../../index.js" } }
+  </script>
 </head>
 <body>
   <h1>Sign Up Form</h1>
-  
+
   <label>
     Email:
     <input type="email" id="email" placeholder="you@example.com">
   </label>
   <p id="emailError" style="color: red;"></p>
-  
+
   <label>
     Password:
     <input type="password" id="password" placeholder="Min 8 characters">
   </label>
   <p id="passwordError" style="color: red;"></p>
-  
+
   <button id="submitBtn" disabled>Submit</button>
   <p id="submitMessage" style="color: green;"></p>
 
   <script type="module">
-    import { createEventState } from './eventState.js';
+    import { createEventState } from '@uistate/core';
 
     // Create store
-    const store = createEventState({ 
+    const store = createEventState({
       email: '',
       password: '',
       emailValid: false,
@@ -55,7 +58,7 @@
     store.subscribe('email', (value) => {
       const isValid = validateEmail(value);
       store.set('emailValid', isValid);
-      
+
       const error = document.getElementById('emailError');
       error.textContent = value && !isValid ? 'Invalid email address' : '';
     });
@@ -64,7 +67,7 @@
     store.subscribe('password', (value) => {
       const isValid = validatePassword(value);
       store.set('passwordValid', isValid);
-      
+
       const error = document.getElementById('passwordError');
       error.textContent = value && !isValid ? 'Password must be at least 8 characters' : '';
     });
@@ -87,7 +90,7 @@
       const email = store.get('email');
       const message = document.getElementById('submitMessage');
       message.textContent = `✓ Form submitted for ${email}`;
-      
+
       // Clear form
       document.getElementById('email').value = '';
       document.getElementById('password').value = '';

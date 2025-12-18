@@ -11,6 +11,9 @@
       margin: 10px 0;
     }
   </style>
+  <script type="importmap">
+    { "imports": { "@uistate/core": "../../index.js" } }
+  </script>
 </head>
 <body>
   <h1>Decoupled Components</h1>
@@ -37,10 +40,10 @@
   </div>
 
   <script type="module">
-    import { createEventState } from './eventState.js';
+    import { createEventState } from '@uistate/core';
 
     // Shared store - the ONLY connection between components
-    const store = createEventState({ 
+    const store = createEventState({
       message: '',
       messageCount: 0
     });
@@ -50,7 +53,7 @@
     document.getElementById('sendBtn').onclick = () => {
       const input = document.getElementById('messageInput');
       const value = input.value.trim();
-      
+
       if (value) {
         store.set('message', value);
         store.set('messageCount', store.get('messageCount') + 1);

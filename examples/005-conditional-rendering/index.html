@@ -4,19 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>005 Conditional Rendering - EventState</title>
+  <script type="importmap">
+    { "imports": { "@uistate/core": "../../index.js" } }
+  </script>
 </head>
 <body>
   <h1>Conditional Rendering</h1>
-  
+
   <label>
     <input type="checkbox" id="toggle">
     Show secret message
   </label>
-  
-  <p id="message" style="display: none;">🎉 You found the secret message!</p>
+
+  <p id="message" style="display: none;">You found the secret message!</p>
 
   <script type="module">
-    import { createEventState } from './eventState.js';
+    import { createEventState } from '@uistate/core';
 
     // Create store
     const store = createEventState({ isVisible: false });

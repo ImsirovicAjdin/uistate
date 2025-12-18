@@ -4,25 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>008 Undo/Redo - EventState</title>
+  <script type="importmap">
+    { "imports": { "@uistate/core": "../../index.js" } }
+  </script>
 </head>
 <body>
   <h1>Counter with Time Travel</h1>
-  
+
   <h2>Count: <span id="count">0</span></h2>
-  
+
   <button id="increment">+1</button>
   <button id="decrement">-1</button>
   <button id="double">×2</button>
-  
+
   <hr>
-  
+
   <button id="undo" disabled>⟲ Undo</button>
   <button id="redo" disabled>⟳ Redo</button>
-  
+
   <p><small>History: <span id="historyInfo">0 states</span></small></p>
 
   <script type="module">
-    import { createEventState } from './eventState.js';
+    import { createEventState } from '@uistate/core';
 
     // Create store
     const store = createEventState({ count: 0 });
@@ -36,29 +39,29 @@
     const updateUI = () => {
       const count = store.get('count');
       document.getElementById('count').textContent = count;
-      
+
       // Update button states
       document.getElementById('undo').disabled = historyIndex === 0;
       document.getElementById('redo').disabled = historyIndex === history.length - 1;
-      
+
       // Update history info
-      document.getElementById('historyInfo').textContent = 
+      document.getElementById('historyInfo').textContent =
         `${historyIndex + 1} of ${history.length} states`;
     };
 
     // Subscribe to count changes and record history
     store.subscribe('count', (value) => {
       updateUI();
-      
+
       // Only record if not time traveling
       if (!isTimeTravel) {
         // Remove any "future" states if we're in the middle of history
         history = history.slice(0, historyIndex + 1);
-        
+
         // Add new state
         history.push(value);
         historyIndex = history.length - 1;
-        
+
         updateUI();
       }
     });
