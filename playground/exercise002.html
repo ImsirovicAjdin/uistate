@@ -1,0 +1,49 @@
+<!-- playground/exercise002.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="importmap">
+    { "imports": { "@uistate/core": "../index.js" } }
+  </script>
+  <style>
+    body { font-family: system-ui; padding: 2rem; }
+    h1 { margin-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <h1 id="heading">Counter: <span id="count">0</span></h1>
+  <button id="increment">+</button>
+  <button id="decrement">-</button>
+
+  <script type="module">
+    // Working counter with increment and decrement
+    import { createEventState } from '@uistate/core';
+
+    const store = createEventState({
+      count: 0
+    });
+
+    document.getElementById('increment').onclick = () => {
+      store.set('count', store.get('count') + 1);
+    };
+
+    document.getElementById('decrement').onclick = () => {
+      store.set('count', store.get('count') - 1);
+    };
+
+    store.subscribe('count', (value) => {
+      document.getElementById('count').textContent = value;
+    });
+
+    // Exercise: Change the h1 color based on count value
+    // - If count is positive: make it green
+    // - If count is negative: make it red
+    // - If count is zero: make it black
+    //
+    // Hint 1: Subscribe to 'count' changes
+    // Hint 2: Use document.getElementById('heading').style.color = '...'
+    // Your code here:
+
+  </script>
+</body>
+</html>

@@ -65,7 +65,9 @@ const createEventState = (initial = {}) => {
                 bus.removeEventListener(path, onEvent);
             };
         },
-        addStateListener: subscribe,
+        addStateListener(path, handler) {
+            return this.subscribe(path, handler);
+        },
         off(unsubscribe) {
             if (typeof unsubscribe !== 'function') {
                 throw new TypeError('off(unsubscribe) requires a function returned by subscribe');

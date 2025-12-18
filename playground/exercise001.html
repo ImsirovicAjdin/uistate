@@ -1,0 +1,38 @@
+<!-- playground/exercise001.html -->
+<!DOCTYPE html>
+<html>
+<head>
+  <script type="importmap">
+    { "imports": { "@uistate/core": "../index.js" } }
+  </script>
+</head>
+<body>
+  <h1>Counter: <span id="count">0</span></h1>
+  <button id="increment">+</button>
+  <button id="decrement">-</button>
+
+  <script type="module">
+    // (1) Import createEventState and create store
+    import { createEventState } from '@uistate/core';
+    const store = createEventState({
+      count: 0
+    });
+
+    // (2) Increment store.count on button click
+    document.getElementById('increment').onclick = () => {
+      const current = store.get('count');
+      store.set('count', current + 1);
+    };
+
+    // (3) Subscribe to count changes
+    store.subscribe('count', (value) => {
+      document.getElementById('count').textContent = value;
+    });
+
+    // (4) Exercise: Add decrement functionality
+    // Hint: Copy the increment handler above and modify it
+    // Your code here:
+
+  </script>
+</body>
+</html>
