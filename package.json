@@ -20,7 +20,8 @@
     "eventTest.js",
     "LICENSE",
     "LICENSE-eventTest.md",
-    "examples/"
+    "examples/",
+    "playground/"
   ],
   "keywords": [
     "state-management",
