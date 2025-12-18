@@ -1,6 +1,6 @@
 {
   "name": "@uistate/core",
-  "version": "5.0.1",
+  "version": "5.0.2",
   "description": "Lightweight event-driven state management with slot orchestration and experimental event-sequence testing (eventTest.js available under dual license)",
   "type": "module",
   "main": "index.js",
