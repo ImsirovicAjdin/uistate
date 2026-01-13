@@ -6,8 +6,8 @@
  */
 
 // Primary: EventState (recommended for application state)
-export { createEventState } from './eventState.js';
-export { createEventState as default } from './eventState.js';
+export { createEventState } from './eventStateNew.js';
+export { createEventState as default } from './eventStateNew.js';
 
 // Specialized: CSS State (for CSS variables and theme management)
 export { createCssState } from './cssState.js';

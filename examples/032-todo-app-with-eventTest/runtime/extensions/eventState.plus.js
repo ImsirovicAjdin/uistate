@@ -3,7 +3,7 @@
 // NOTE: This module composes the existing './eventState.js' implementation and returns
 // an enhanced facade. The original fine-grained semantics (per-path events) remain intact.
 
-import createEventStateBase from '../core/eventState.js';
+import createEventStateBase from '../core/eventStateNew.js';
 
 /**
  * Create an enhanced EventState store while preserving the original semantics.

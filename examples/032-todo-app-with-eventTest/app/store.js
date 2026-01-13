@@ -1,5 +1,5 @@
 // store.js — singleton eventState store for the SPA
-import { createEventState } from '../runtime/core/eventState.js';
+import { createEventState } from '../runtime/core/eventStateNew.js';
 
 const initial = {
   ui: {
