@@ -20,7 +20,7 @@
  * @example
  * const store = createEventState({ count: 0, user: { name: 'Alice' } });
  *
- * // Subscribe to specific path (receives value directly)
+ * // Subscribe to specific path
  * const unsub = store.subscribe('count', (value) => {
  *   console.log('Count changed:', value);
  * });
@@ -49,6 +49,7 @@
 export function createEventState(initial = {}) {
   const state = JSON.parse(JSON.stringify(initial));
   const listeners = new Map();
+  const asyncOps = new Map();
   let destroyed = false;
 
   return {
@@ -89,22 +90,25 @@ export function createEventState(initial = {}) {
       if (!destroyed) {
         const detail = { path, value, oldValue };
 
-        // Notify exact path subscribers (pass value directly for backwards compatibility)
+        // Notify exact path subscribers
         const exactListeners = listeners.get(path);
         if (exactListeners) {
-          exactListeners.forEach(cb => cb(value));
+          exactListeners.forEach(cb => cb(value, detail));
         }
 
-        // Notify wildcard subscribers for all parent paths (pass detail object)
-        for (let i = 0; i < parts.length; i++) {
-          const parentPath = parts.slice(0, i + 1).join('.');
-          const wildcardListeners = listeners.get(`${parentPath}.*`);
-          if (wildcardListeners) {
-            wildcardListeners.forEach(cb => cb(detail));
+        // Notify wildcard subscribers for parent paths
+        if (parts.length) {
+          let parent = "";
+          for (const p of parts) {
+            parent = parent ? `${parent}.${p}` : p;
+            const wildcardListeners = listeners.get(`${parent}.*`);
+            if (wildcardListeners) {
+              wildcardListeners.forEach(cb => cb(detail));
+            }
           }
         }
 
-        // Notify global subscribers (pass detail object)
+        // Notify global subscribers
         const globalListeners = listeners.get('*');
         if (globalListeners) {
           globalListeners.forEach(cb => cb(detail));
@@ -114,10 +118,67 @@ export function createEventState(initial = {}) {
       return value;
     },
 
+    async setAsync(path, fetcher) {
+      if (destroyed) throw new Error('Cannot setAsync on destroyed store');
+      if (!path) throw new TypeError('setAsync requires a path');
+      if (typeof fetcher !== 'function') {
+        throw new TypeError('setAsync(path, fetcher) requires a function fetcher');
+      }
+
+      if (asyncOps.has(path)) {
+        asyncOps.get(path).controller.abort();
+      }
+
+      const controller = new AbortController();
+      asyncOps.set(path, { controller });
+
+      try {
+        this.set(`${path}.status`, 'loading');
+        this.set(`${path}.error`, null);
+
+        const data = await fetcher(controller.signal);
+
+        if (destroyed) throw new Error('Cannot setAsync on destroyed store');
+
+        this.set(path, data);
+        this.set(`${path}.status`, 'success');
+        return data;
+      } catch (err) {
+        if (err?.name === 'AbortError') {
+          this.set(`${path}.status`, 'cancelled');
+          const cancelErr = new Error('Request cancelled');
+          cancelErr.name = 'AbortError';
+          throw cancelErr;
+        }
+
+        this.set(`${path}.status`, 'error');
+        this.set(`${path}.error`, err?.message ?? String(err));
+        throw err;
+      } finally {
+        const op = asyncOps.get(path);
+        if (op?.controller === controller) {
+          asyncOps.delete(path);
+        }
+      }
+    },
+
+    cancel(path) {
+      if (destroyed) throw new Error('Cannot cancel on destroyed store');
+      if (!path) throw new TypeError('cancel requires a path');
+
+      if (asyncOps.has(path)) {
+        asyncOps.get(path).controller.abort();
+        asyncOps.delete(path);
+        this.set(`${path}.status`, 'cancelled');
+      }
+    },
+
     /**
      * Subscribe to changes at path
      * @param {string} path - Path to subscribe to (supports wildcards: 'user.*', '*')
-     * @param {Function} handler - Callback function receiving { path, value, oldValue }
+     * @param {Function} handler - Callback function.
+     *   - Exact path subscriptions: (value, meta) => void
+     *   - Wildcard/global subscriptions: (meta) => void
      * @returns {Function} Unsubscribe function
      */
     subscribe(path, handler) {
@@ -140,6 +201,8 @@ export function createEventState(initial = {}) {
     destroy() {
       if (!destroyed) {
         destroyed = true;
+        asyncOps.forEach(({ controller }) => controller.abort());
+        asyncOps.clear();
         listeners.clear();
       }
     }
