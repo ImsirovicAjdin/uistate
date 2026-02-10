@@ -99,12 +99,16 @@ qc.invalidate('users');
 
 ## Ecosystem
 
-| Package | Description |
-|---|---|
-| [@uistate/core](https://www.npmjs.com/package/@uistate/core) | This package — event-driven state management |
-| [@uistate/css](https://www.npmjs.com/package/@uistate/css) | CSS-native state via custom properties and data attributes |
-| [@uistate/event-test](https://www.npmjs.com/package/@uistate/event-test) | Event-sequence testing (proprietary license) |
-| [@uistate/examples](https://www.npmjs.com/package/@uistate/examples) | Example applications and patterns |
+| Package | Description | License |
+|---|---|---|
+| [@uistate/core](https://www.npmjs.com/package/@uistate/core) | Path-based state management with wildcard subscriptions and async support | MIT |
+| [@uistate/react](https://www.npmjs.com/package/@uistate/react) | React adapter — `usePath`, `useIntent`, `useAsync` hooks and `EventStateProvider` | MIT |
+| [@uistate/css](https://www.npmjs.com/package/@uistate/css) | CSS-native state via custom properties and data attributes | MIT |
+| [@uistate/event-test](https://www.npmjs.com/package/@uistate/event-test) | Event-sequence testing for UIstate stores | Proprietary |
+| [@uistate/examples](https://www.npmjs.com/package/@uistate/examples) | Example applications and patterns | MIT |
+| [@uistate/aliases](https://www.npmjs.com/package/@uistate/aliases) | Ergonomic single-character and short-name DOM aliases for vanilla JS | MIT |
+
+📖 **Documentation:** [uistate.com](https://uistate.com)
 
 ## License
 
@@ -114,6 +118,7 @@ Copyright © 2025 Ajdin Imsirovic
 
 ## Links
 
+- [Documentation](https://uistate.com)
 - [GitHub](https://github.com/ImsirovicAjdin/uistate)
 - [npm](https://www.npmjs.com/package/@uistate/core)
 - [Issues](https://github.com/ImsirovicAjdin/uistate/issues)
