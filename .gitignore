@@ -57,3 +57,8 @@ _noPublish/
 # Transition: examples moved to @uistate/examples package
 examples/
 playground/
+
+# Moved to @uistate/css package
+cssState.js
+stateSerializer.js
+templateManager.js
