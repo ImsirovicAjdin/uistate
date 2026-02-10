@@ -61,7 +61,13 @@ export function createEventState(initial = {}) {
     get(path) {
       if (destroyed) throw new Error('Cannot get from destroyed store');
       if (!path) return state;
-      return path.split(".").reduce((obj, key) => obj?.[key], state);
+      const parts = path.split('.');
+      let cur = state;
+      for (const p of parts) {
+        if (cur == null) return undefined;
+        cur = cur[p];
+      }
+      return cur;
     },
 
     /**
@@ -140,7 +146,7 @@ export function createEventState(initial = {}) {
 
         if (destroyed) throw new Error('Cannot setAsync on destroyed store');
 
-        this.set(path, data);
+        this.set(`${path}.data`, data);
         this.set(`${path}.status`, 'success');
         return data;
       } catch (err) {
