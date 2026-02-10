@@ -24,5 +24,3 @@ This policy may evolve as the project matures.
 Feel free to open an issue for questions about usage or to report bugs.
 
 ---
-
-*UIstate is a curated project focused on practical state management patterns for modern web applications.*

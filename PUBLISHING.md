@@ -7,13 +7,13 @@ This package uses **Trusted Publishers** (OIDC) via GitHub Actions for secure, t
 ### 1. Update Version Number
 
 ```bash
-# Patch release (4.1.2 -> 4.1.3)
+# Patch release (5.5.0 -> 5.5.1)
 npm version patch
 
-# Minor release (4.1.2 -> 4.2.0)
+# Minor release (5.5.0 -> 5.6.0)
 npm version minor
 
-# Major release (4.1.2 -> 5.0.0)
+# Major release (5.5.0 -> 6.0.0)
 npm version major
 ```
 
@@ -31,7 +31,7 @@ git push origin main --tags
 ### 3. Create a GitHub Release
 
 1. Go to: https://github.com/ImsirovicAjdin/uistate/releases/new
-2. Select the tag you just pushed (e.g., `v4.1.3`)
+2. Select the tag you just pushed (e.g., `v5.5.1`)
 3. Add release notes (describe changes)
 4. Click **"Publish release"**
 
@@ -105,9 +105,4 @@ If you absolutely need to publish manually with a token:
 - **Trusted publishers are the recommended approach** for 2025+
 - This workflow includes `--provenance` flag for supply chain transparency
 
-## Version History
-
-- v4.1.2 (current) - CSS State focused release
-- v5.0.0 (planned) - EventState framework release
-
-Last updated: December 9, 2025
+Last updated: February 2026

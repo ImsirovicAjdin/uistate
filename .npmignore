@@ -5,10 +5,6 @@ node_modules/
 .vscode/
 .idea/
 
-# Examples (keep these - they're valuable)
-# Commented out so examples ship with package
-# /examples/
-
 # Scripts and development tools
 /scripts/
 
@@ -37,7 +33,3 @@ _noPublish/
 *.log
 .DS_Store
 Thumbs.db
-
-examples/*/package.json
-examples/*/package-lock.json
-examples/*/node_modules/
