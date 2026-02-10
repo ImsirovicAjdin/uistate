@@ -1,6 +1,6 @@
 {
   "name": "@uistate/core",
-  "version": "5.2.0",
+  "version": "5.3.0",
   "description": "Lightweight event-driven state management with slot orchestration and experimental event-sequence testing (eventTest.js available under dual license)",
   "type": "module",
   "main": "index.js",
@@ -10,7 +10,8 @@
     "./eventStateNew": "./eventStateNew.js",
     "./cssState": "./cssState.js",
     "./stateSerializer": "./stateSerializer.js",
-    "./templateManager": "./templateManager.js"
+    "./templateManager": "./templateManager.js",
+    "./query": "./queryClient.js"
   },
   "files": [
     "index.js",
@@ -19,11 +20,10 @@
     "cssState.js",
     "stateSerializer.js",
     "templateManager.js",
+    "queryClient.js",
     "eventTest.js",
     "LICENSE",
-    "LICENSE-eventTest.md",
-    "examples/",
-    "playground/"
+    "LICENSE-eventTest.md"
   ],
   "keywords": [
     "state-management",

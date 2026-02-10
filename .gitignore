@@ -54,4 +54,6 @@ SETUP-COMPLETE.md
 # Private/unpublished work
 _noPublish/
 
-examples/011/*
+# Transition: examples moved to @uistate/examples package
+examples/
+playground/
