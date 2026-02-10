@@ -1,6 +1,6 @@
 {
   "name": "@uistate/core",
-  "version": "5.5.1",
+  "version": "5.5.2",
   "description": "Lightweight event-driven state management with path-based subscriptions, wildcards, and async support",
   "type": "module",
   "main": "index.js",
