@@ -1,7 +1,7 @@
 {
   "name": "@uistate/core",
-  "version": "5.4.0",
-  "description": "Lightweight event-driven state management with slot orchestration and experimental event-sequence testing (eventTest.js available under dual license)",
+  "version": "5.5.0",
+  "description": "Lightweight event-driven state management with path-based subscriptions, wildcards, and async support",
   "type": "module",
   "main": "index.js",
   "exports": {
@@ -15,9 +15,7 @@
     "eventState.js",
     "eventStateNew.js",
     "queryClient.js",
-    "eventTest.js",
-    "LICENSE",
-    "LICENSE-eventTest.md"
+    "LICENSE"
   ],
   "keywords": [
     "state-management",
@@ -28,8 +26,8 @@
     "zero-dependency",
     "framework-free",
     "micro-framework",
-    "testing",
-    "event-testing"
+    "async-state",
+    "query-client"
   ],
   "author": "Ajdin Imsirovic",
   "license": "MIT",

@@ -62,3 +62,7 @@ playground/
 cssState.js
 stateSerializer.js
 templateManager.js
+
+# Moved to @uistate/event-test package
+eventTest.js
+LICENSE-eventTest.md
