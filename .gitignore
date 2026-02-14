@@ -50,19 +50,10 @@ Thumbs.db
 
 # Personal setup notes (local only)
 SETUP-COMPLETE.md
+PUBLISHING.md
 
 # Private/unpublished work
 _noPublish/
 
-# Transition: examples moved to @uistate/examples package
-examples/
-playground/
-
-# Moved to @uistate/css package
-cssState.js
-stateSerializer.js
-templateManager.js
-
-# Moved to @uistate/event-test package
-eventTest.js
-LICENSE-eventTest.md
+# Tests (not published to npm)
+tests/

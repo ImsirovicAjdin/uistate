@@ -35,7 +35,7 @@ store.set('count', 1);
 
 ### `createEventState(initialState)`
 
-Returns a store with `get`, `set`, `subscribe`, `setAsync`, `cancel`, `destroy`.
+Returns a store with `get`, `set`, `batch`, `setMany`, `subscribe`, `setAsync`, `cancel`, `destroy`.
 
 ### `store.get(path?)`
 
@@ -63,6 +63,31 @@ const unsub = store.subscribe('count', (value, { oldValue }) => {
   console.log(`${oldValue} → ${value}`);
 });
 unsub(); // cleanup
+```
+
+### `store.batch(fn)`
+
+Batch multiple `set()` calls. Subscribers fire once per unique path after the batch completes, not during. Supports nesting.
+
+```javascript
+store.batch(() => {
+  store.set('ui.route.view', 'user');
+  store.set('ui.route.path', '/users/42');
+  store.set('ui.route.params', { id: '42' });
+});
+// Subscribers fire here, once per path, all state consistent
+```
+
+### `store.setMany(entries)`
+
+Set multiple paths atomically. Shorthand for `batch` + a loop of `set` calls. Accepts a plain object, an array of `[path, value]` pairs, or a `Map`.
+
+```javascript
+store.setMany({
+  'ui.route.view': 'user',
+  'ui.route.path': '/users/42',
+  'ui.route.params': { id: '42' },
+});
 ```
 
 ### `store.setAsync(path, fetcher)`

@@ -2,17 +2,19 @@
 node_modules/
 .git/
 .gitignore
+.github/
 .vscode/
 .idea/
 
-# Scripts and development tools
-/scripts/
-
 # Testing
-/tests/
+tests/
 *.test.js
 *.spec.js
-/coverage/
+coverage/
+
+# Internal docs (not for npm consumers)
+CONTRIBUTING.md
+PUBLISHING.md
 
 # Build tools
 lerna.json
@@ -33,3 +35,4 @@ _noPublish/
 *.log
 .DS_Store
 Thumbs.db
+package-lock.json

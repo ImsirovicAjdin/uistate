@@ -6,5 +6,5 @@
  */
 
 // Primary: EventState (recommended for application state)
-export { createEventState } from './eventStateNew.js';
-export { createEventState as default } from './eventStateNew.js';
+export { createEventState } from './eventState.js';
+export { createEventState as default } from './eventState.js';

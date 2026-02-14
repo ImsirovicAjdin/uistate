@@ -1,19 +1,20 @@
 {
   "name": "@uistate/core",
-  "version": "5.5.2",
+  "version": "5.6.0",
   "description": "Lightweight event-driven state management with path-based subscriptions, wildcards, and async support",
   "type": "module",
   "main": "index.js",
+  "scripts": {
+    "test": "node tests/test-batch.js && node tests/test-batch-dogfood.js"
+  },
   "exports": {
     ".": "./index.js",
     "./eventState": "./eventState.js",
-    "./eventStateNew": "./eventStateNew.js",
     "./query": "./queryClient.js"
   },
   "files": [
     "index.js",
     "eventState.js",
-    "eventStateNew.js",
     "queryClient.js",
     "LICENSE"
   ],
@@ -21,10 +22,7 @@
     "state-management",
     "event-driven",
     "reactive",
-    "dom-events",
-    "slot-orchestration",
     "zero-dependency",
-    "framework-free",
     "micro-framework",
     "async-state",
     "query-client"
