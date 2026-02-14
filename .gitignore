@@ -54,6 +54,3 @@ PUBLISHING.md
 
 # Private/unpublished work
 _noPublish/
-
-# Tests (not published to npm)
-tests/

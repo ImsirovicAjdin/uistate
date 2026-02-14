@@ -131,6 +131,7 @@ qc.invalidate('users');
 | [@uistate/css](https://www.npmjs.com/package/@uistate/css) | CSS-native state via custom properties and data attributes | MIT |
 | [@uistate/event-test](https://www.npmjs.com/package/@uistate/event-test) | Event-sequence testing for UIstate stores | Proprietary |
 | [@uistate/examples](https://www.npmjs.com/package/@uistate/examples) | Example applications and patterns | MIT |
+| [@uistate/renderer](https://www.npmjs.com/package/@uistate/renderer) | Direct-binding reactive renderer: `bind-*`, `set`, `each` attributes. Zero build step | Proprietary |
 | [@uistate/aliases](https://www.npmjs.com/package/@uistate/aliases) | Ergonomic single-character and short-name DOM aliases for vanilla JS | MIT |
 
 📖 **Documentation:** [uistate.com](https://uistate.com)

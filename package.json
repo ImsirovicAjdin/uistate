@@ -1,11 +1,13 @@
 {
   "name": "@uistate/core",
-  "version": "5.6.0",
+  "version": "5.6.1",
   "description": "Lightweight event-driven state management with path-based subscriptions, wildcards, and async support",
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "node tests/test-batch.js && node tests/test-batch-dogfood.js"
+    "postinstall": "node self-test.js",
+    "test": "node tests/core.test.js",
+    "self-test": "node self-test.js"
   },
   "exports": {
     ".": "./index.js",
@@ -16,6 +18,7 @@
     "index.js",
     "eventState.js",
     "queryClient.js",
+    "self-test.js",
     "LICENSE"
   ],
   "keywords": [
