@@ -1,6 +1,6 @@
 {
   "name": "@uistate/core",
-  "version": "5.6.1",
+  "version": "5.6.2",
   "description": "Lightweight event-driven state management with path-based subscriptions, wildcards, and async support",
   "type": "module",
   "main": "index.js",
@@ -28,7 +28,10 @@
     "zero-dependency",
     "micro-framework",
     "async-state",
-    "query-client"
+    "query-client",
+    "domless-testing",
+    "view-as-state",
+    "state-as-view"
   ],
   "author": "Ajdin Imsirovic",
   "license": "MIT",

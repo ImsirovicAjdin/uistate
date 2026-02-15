@@ -19,7 +19,6 @@ export const createQueryClient = (store) => {
     },
 
     // Subscribe to query errors
-
     subscribeToError(key, cb) {
       return store.subscribe(`query.${key}.error`, cb);
     },

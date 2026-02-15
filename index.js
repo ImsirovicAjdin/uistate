@@ -1,6 +1,6 @@
 /**
  * UIstate v5 - Core barrel exports
- * 
+ *
  * EventState is the primary export for application state management.
  * CSS state management has moved to @uistate/css.
  */

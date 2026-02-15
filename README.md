@@ -127,8 +127,9 @@ qc.invalidate('users');
 | Package | Description | License |
 |---|---|---|
 | [@uistate/core](https://www.npmjs.com/package/@uistate/core) | Path-based state management with wildcard subscriptions and async support | MIT |
+| [@uistate/view](https://www.npmjs.com/package/@uistate/view) | State-driven view: DOMless resolve + surgical DOM projector. View tree as first-class state | MIT |
 | [@uistate/react](https://www.npmjs.com/package/@uistate/react) | React adapter — `usePath`, `useIntent`, `useAsync` hooks and `EventStateProvider` | MIT |
-| [@uistate/css](https://www.npmjs.com/package/@uistate/css) | CSS-native state via custom properties and data attributes | MIT |
+| [@uistate/css](https://www.npmjs.com/package/@uistate/css) | Reactive CSSOM engine — design tokens, typed validation, WCAG enforcement, all via path-based state | MIT |
 | [@uistate/event-test](https://www.npmjs.com/package/@uistate/event-test) | Event-sequence testing for UIstate stores | Proprietary |
 | [@uistate/examples](https://www.npmjs.com/package/@uistate/examples) | Example applications and patterns | MIT |
 | [@uistate/renderer](https://www.npmjs.com/package/@uistate/renderer) | Direct-binding reactive renderer: `bind-*`, `set`, `each` attributes. Zero build step | Proprietary |
@@ -140,7 +141,7 @@ qc.invalidate('users');
 
 MIT — see [LICENSE](./LICENSE).
 
-Copyright © 2025 Ajdin Imsirovic
+Copyright © 2025–2026 Ajdin Imsirovic
 
 ## Links
 

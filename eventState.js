@@ -1,5 +1,5 @@
 /**
- * EventState v2 - Optimized Path-Based State Management
+ * EventState v5.6.2 - Optimized Path-Based State Management
  *
  * A lightweight, performant state management library using path-based subscriptions.
  * Optimized for selective notifications and granular updates.
